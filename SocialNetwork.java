@@ -5,12 +5,9 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -139,7 +136,7 @@ public class SocialNetwork extends Application {
 
         vb3.setAlignment(Pos.TOP_CENTER);
         vb3.setMaxWidth(300);
-        vb3.setPadding(new Insets(20,0,20,50));
+        vb3.setPadding(new Insets(20,0,20,20));
         vb3.setSpacing(20);
         vb3.getChildren().addAll(vb2,vb4);
 
@@ -161,7 +158,7 @@ public class SocialNetwork extends Application {
         vb1.setSpacing(20);
         vb1.setAlignment(Pos.TOP_CENTER);
         // VBox.(user_bio,Pos.CENTER_RIGHT);
-        vb1.setPadding(new Insets(20,100,5,0));
+        vb1.setPadding(new Insets(20,100,20,0));
 
         //for writing posts
 
@@ -169,15 +166,42 @@ public class SocialNetwork extends Application {
         tf_posts.getStyleClass().add("text_field");
         tf_posts.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 15));
         tf_posts.setMaxWidth(600);
+        tf_posts.setPromptText("Write a Post....");
         tf_posts.setPrefHeight(70);
         tf_posts.setWrapText(true);
 
         Button post_button  = new Button("Post");
         post_button.setPrefSize(50,10);
 
-        vb1.getChildren().addAll(user_name,user_bio,tf_posts,post_button);
+        ScrollPane sp_posts= new ScrollPane();
+        VBox vb_posts = new VBox();
+        vb_posts.setPadding(new Insets(20,20,20,20));
+        vb_posts.setSpacing(10);
+        vb_posts.setMaxWidth(600);
+        String test="Control System 2 Next section will be on Monday in 148\n" +
+                "Section 3 & 2 from 33824 to 33941: 12:30pm\n" +
+                "Section 1 & 2 from 33701 to 33823: 2:10pm\n" +
+                "OS section is in 291\n" +
+                "Section 3 & 2 from 33824 to 33941: 2:10pm\n" +
+                "Section 1 & 2 from 33701 to 33823: 12:30pm";
+        String test2 = "بكرة فيه شيفتين معمل للmultithreading و الdouble tank لسكشن 1 و 3\n" +
+                "\n" +
+                "دول اخر شيفتات للتجربتين دول\n" +
+                "\n" +
+                "اللي هيعوض عشان مجاش في ميعاده مش هياخد الدرجة كاملة هينقص درجة\n" +
+                "\n" +
+                "و المواعيد اول شيفت من 10 ل 1 و التاني من 1 و نص ل 4 و نص\n" +
+                "\n" +
+                "محدش يتأخر و محدش المفروض ييجي بدري ييجي متأخر\n" +
+                "\n" +
+                "اللي عندهم multithreading المفروض يعملوا اول 2 experiments في البيت قبل ما بيجو و بوريهملي في المعمل";
+        vb_posts.getChildren().addAll(new Post("hello", "sama",345).getAll_post(),new Post(test, "sama",345).getAll_post(),new Post(test2, "sama",345).getAll_post());
+        sp_posts.setContent(vb_posts);
+        sp_posts.setMaxWidth(630);
 
+        vb1.getChildren().addAll(user_name,user_bio,tf_posts,post_button,sp_posts);
 
+        bp.setPadding(new Insets(0,0,100,0));
         bp.setCenter(vb1);
         bp.setTop(hb);
         bp.setLeft(vb3);
