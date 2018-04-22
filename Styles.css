@@ -1,12 +1,20 @@
 .root{
-    -fx-background-color: ##D3D3D3;
+    -fx-background-color: #D3D3D3;
 }
 .top_bar{
     -fx-background-color: 	linear-gradient(to bottom,#1E90FF, #1E90FF);
      }
 .image_view{
+    -fx-background-color: #FFFFFF;
     -fx-border-color: #A9A9A9;
-    -fx-background-color: 	#1E90FF;
+    -fx-border-style: solid;
+    -fx-border-width: 4;
+    -fx-border-radius: 10 ;
+    -fx-background-radius: 10;
+}
+.info_area{
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 5;
 }
 
 .text_field{
