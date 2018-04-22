@@ -1,6 +1,8 @@
 package com.company;
-
+import java.io.FileInputStream;
 import java.util.Vector;
+import javafx.scene.image.Image;
+import java.io.FileNotFoundException;
 
 class Date_Of_Birth
 {
@@ -11,7 +13,7 @@ class Date_Of_Birth
 
 
     public Date_Of_Birth() {
-        this.day =0 ;this.month =0 ; this.year =0 ;
+        this.day =1 ;this.month =1 ; this.year =1990 ;
     }
     public Date_Of_Birth(int day, int month, int year) {
         this.day = day;
@@ -49,6 +51,10 @@ class Date_Of_Birth
                 '}';
     }
 
+    public String print(){
+        return day+"/"+month+"/"+year;
+    }
+
     public void setYear(int year) {
         this.year = year;
 
@@ -57,8 +63,8 @@ class Date_Of_Birth
 class Informations
 {
     public enum  Gender { male , female };
-    public enum  MaritalStatus { single , inarelationship ,engaged , married  };
-    private Date_Of_Birth DateOfBirth;
+    public enum  MaritalStatus { non ,single , inarelationship ,engaged , married  };
+    private Date_Of_Birth DateOfBirth= new Date_Of_Birth();
     private String school;
     private String college;
     private String work ;
@@ -71,7 +77,12 @@ class Informations
     private MaritalStatus status;
 
 
-    public Informations () { }
+    public Informations () {
+        gender=Gender.male;
+        status=MaritalStatus.non;
+        school=" "; college= " "; work= " "; birth_place=" "; city=" "; Bio=" ";
+
+    }
 
     public Date_Of_Birth getDateOfBirth() {
         return DateOfBirth;
@@ -141,6 +152,11 @@ class Informations
         NumberOfLanguages++;
         languages.add(lang);
     }
+
+    public Vector<String> getLanguages() {
+        return languages;
+    }
+
     public Gender getGender() {
         return gender;
     }
@@ -180,10 +196,18 @@ class user {
     private int ID;
     private int NumberOfFriends = 0 ;
     private Vector <user> friends = new Vector <user> (50)  ;
-    private Informations info;
+    private Informations info= new Informations();
+    private Image ProfilePicture;
 
     public user() {
-
+        username=" ";
+        Password= " ";
+        ID=0;
+        try {
+            ProfilePicture = new Image(new FileInputStream("E:/Mark/mpp.jpg")); // directory for default profile picture
+        } catch (FileNotFoundException ex) {
+            // handle exception...
+        }
     }
 
     public user(String username, String password , int id ) {
@@ -223,6 +247,10 @@ class user {
     public void setNumberOfFriends(int numberOfFriends) {
         NumberOfFriends = numberOfFriends;
     }
+
+    public Image getProfilePicture() {return ProfilePicture;}
+
+    public  void setProfilePicture(Image profilePicture) {ProfilePicture = profilePicture;}
 
     public void addFriend (user friend )
     {
