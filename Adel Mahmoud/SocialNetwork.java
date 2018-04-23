@@ -1,4 +1,5 @@
 
+
 package socialnetwork;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -18,7 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
-import socialnetwork.PostTemplate;
+import socialnetwork.Post;
 
 public class SocialNetwork extends Application {
 
@@ -30,25 +31,63 @@ public class SocialNetwork extends Application {
      Button friendsListButton;
      Button groupsListButton;
      private static final int postsMargin = 50;
+     TextField statusBar;
+     Button postStatusFromStatusBarButton;
+     Pane upperHMenue;
+     BorderPane  borderPane;
+     Pane centerPane;
+     ScrollPane CenterPostsPane;
+     Group postsGroup;
+     Button searchButton;
      
     
     public static void main(String[] args) {
          launch(args);
          
     }
-    
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("Social Network");
+    void setCenterPane()
+    {
+        centerPane = new Pane();
+        centerPane.setStyle("-fx-padding:5;" + "-fx-border-style:solid;"
+        + "-fx-border-width:0;" + "-fx-border-insets: 0;"
+       + "-fx-border-radius: 0;" + "-fx-border-color: #ECF0F1;"+"-fx-background-color: #ECF0F1;"+"flex-direction: column;");
+        borderPane.setCenter(centerPane);
         
-        //set primaryStage boundaries to visible bounds of the main screen
-        primaryStage_boundries_set_to_bounds_of_mainScreen(primaryStage);
+        statusBar = new TextField();
+        statusBar.setPrefSize(1000, 60); 
+        statusBar.setLayoutX(10);
+        statusBar.setLayoutY(10); 
+        statusBar.setPromptText("What's in your mind?...");
+        centerPane.getChildren().add(statusBar);
         
-        //adding stackepane layout to the background and will pack other components on it
-        BorderPane  borderPane = new BorderPane ();
+        postStatusFromStatusBarButton =new Button();
+        postStatusFromStatusBarButton.setLayoutX(800);
+        postStatusFromStatusBarButton.setLayoutY(75);
+        postStatusFromStatusBarButton.setText("Post");
+        postStatusFromStatusBarButton.setPrefSize(60,40);
+        centerPane.getChildren().add(postStatusFromStatusBarButton);
+        postStatusFromStatusBarButton.setOnAction(e->{
+        //implement Post a post here 
+        });
+         
+         
+        CenterPostsPane = new ScrollPane();
+        CenterPostsPane.setLayoutX(10);
+        CenterPostsPane.setLayoutY(120);
+        CenterPostsPane.setStyle("-fx-padding:5;" + "-fx-border-style:solid;"
+        + "-fx-border-width:0;" + "-fx-border-insets: 0;"
+       + "-fx-border-radius: 0;" + "-fx-border-color: #ECF0F1;"+"-fx-background-color: #ECF0F1;"+"flex-direction: column;");
+        CenterPostsPane.setPrefSize(Post.getPostWidth()+100,500);
+        CenterPostsPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        //CenterPostsPane.setFitToHeight(true);
+        //CenterPostsPane.setFitToWidth(true);
+        CenterPostsPane.setVmax(1);
         
-        
-        Pane upperHMenue = new Pane();
+        centerPane.getChildren().add(CenterPostsPane);
+    }
+    void setUpperHMnue()
+    {
+        upperHMenue = new Pane();
         upperHMenue.setPadding(new Insets(15, 12, 15, 12));
         
         
@@ -60,6 +99,9 @@ public class SocialNetwork extends Application {
         homeButton.setLayoutX(1000);
         homeButton.setLayoutY(10);
         homeButton.setPrefSize(100,10);
+        homeButton.setOnAction(e->{
+            //implement "go to home " here
+        });
         
         profileButton = new Button();
         profileButton.setText("Profile");
@@ -67,6 +109,9 @@ public class SocialNetwork extends Application {
         profileButton.getStyleClass().add("border-blue");
         profileButton.setLayoutX(1110);
         profileButton.setLayoutY(10);
+        profileButton.setOnAction(e->{
+            //implement "go to profile " here
+        });
         
         searchTxtBox=new TextField();
         searchTxtBox.setPromptText("search here...");
@@ -74,13 +119,30 @@ public class SocialNetwork extends Application {
        searchTxtBox.setLayoutX(500);
        searchTxtBox.setLayoutY(10);
        
-        
+        searchButton = new Button();
+        searchButton.setText("Search");
+        searchButton.setLayoutX(500 +5 +150);
+        searchButton.setLayoutY(10);
+        searchButton.setOnAction(e->{
+            //implement search here
+        });
         
         upperHMenue.setStyle("-fx-padding:5;" + "-fx-border-style:solid;"
         + "-fx-border-width: 5;" + "-fx-border-insets: 0;"
         + "-fx-border-radius: 1;" + "-fx-border-color: #AB4642;"+"-fx-background-color: #AB4642;");
         
-        upperHMenue.getChildren().addAll(userNameLabel,homeButton,profileButton,searchTxtBox);
+        upperHMenue.getChildren().addAll(userNameLabel,homeButton,profileButton,searchTxtBox,searchButton);
+    }
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("Social Network");
+        
+        //set primaryStage boundaries to visible bounds of the main screen
+        primaryStage_boundries_set_to_bounds_of_mainScreen(primaryStage);
+        
+        
+        borderPane = new BorderPane ();
+        setUpperHMnue();
         borderPane.setTop(upperHMenue);
        
        
@@ -92,51 +154,43 @@ public class SocialNetwork extends Application {
         groupsListButton.setPrefSize(250,10);
         VBox leftVMenu = new VBox();
         leftVMenu.setStyle("-fx-background-color: #AB4642");
-        leftVMenu.getChildren().addAll(friendsListButton,groupsListButton);
+        leftVMenu.getChildren().addAll(groupsListButton,friendsListButton);
         borderPane.setLeft(leftVMenu);
         
         
-        Pane centerPane = new Pane();
-        centerPane.setStyle("-fx-padding:5;" + "-fx-border-style:solid;"
-        + "-fx-border-width:0;" + "-fx-border-insets: 0;"
-       + "-fx-border-radius: 0;" + "-fx-border-color: #ECF0F1;"+"-fx-background-color: #ECF0F1;"+"flex-direction: column;");
-        borderPane.setCenter(centerPane);
+        setCenterPane();
+        //**********************************************************Adding Posts*****************************************************
+        Post p1 = new Post("postTextaaa aaaa  aaaa aa aa aa aaa \naaaaaaaa" + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaa\n aa \n aaaaaaaaaaaaa","user 1");
+        Post p2 = new Post("postTextaaa aaaa  aaaa aa aa aa aaa \naaaaaaaa" + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaa\n aa \n aaaaaaaaaaaaa","user 2");
+        Post p3 = new Post("postTextaaa aaaa  aaaa aa aa aa aaa \naaaaaaaa" + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaa\n aa \n aaaaaaaaaaaaa","user 3");
+        Post p4 = new Post("postTextaaa aaaa  aaaa aa aa aa aaa \naaaaaaaa" + "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaa\n aa \n aaaaaaaaaaaaa","user 4");
+
+        postsGroup = new Group();
         
-        ScrollPane CenterPostsPane = new ScrollPane();
-        
-        CenterPostsPane.setLayoutX(10);
-        CenterPostsPane.setLayoutY(10);
-        
-        CenterPostsPane.setStyle("-fx-padding:5;" + "-fx-border-style:solid;"
-        + "-fx-border-width:0;" + "-fx-border-insets: 0;"
-       + "-fx-border-radius: 0;" + "-fx-border-color: #ECF0F1;"+"-fx-background-color: #ECF0F1;"+"flex-direction: column;");
-        CenterPostsPane.setPrefSize(PostTemplate.getPostTemplateWidth()+100,620);
-        
-        Group postsGroup = new Group();
-        
-        ScrollPane myPane = PostTemplate.printAPost("postTextaaa aaaa  aaaa aa aa aa aaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaa\n aa \n aaaaaaaaaaaaa","user_name");
+        Pane myPane = p1.printAPost();
         myPane.setLayoutX(10);
         myPane.setLayoutY(10);
         postsGroup.getChildren().add(myPane);
         
         
-        ScrollPane myPane2 = PostTemplate.printAPost("postTextaaa aaaa  aaaa aa aa aa aaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaa\n aa \n aaaaaaaaaaaaa","user_name");
-         myPane2.setLayoutX(10);
-        myPane2.setLayoutY(10+1*PostTemplate.getPostTemplateHeight()+postsMargin);
+        Pane myPane2 = p2.printAPost();
+        myPane2.setLayoutX(10);
+        myPane2.setLayoutY(10+1*Post.getPostHeight()+postsMargin);
         postsGroup.getChildren().add(myPane2);
        
-        ScrollPane myPane3 = PostTemplate.printAPost("postTextaaa aaaa  aaaa aa aa aa aaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaa\n aa \n aaaaaaaaaaaaa","user_name");
-         myPane3.setLayoutX(10);
-        myPane3.setLayoutY(10+2*PostTemplate.getPostTemplateHeight()+2*postsMargin);
+        Pane myPane3 = p3.printAPost();
+        myPane3.setLayoutX(10);
+        myPane3.setLayoutY(10+2*Post.getPostHeight()+2*postsMargin);
         postsGroup.getChildren().add(myPane3);
+        Pane myPane4 = p4.printAPost();
+        myPane4.setLayoutX(10);
+        myPane4.setLayoutY(10+3*Post.getPostHeight()+3*postsMargin);
+        postsGroup.getChildren().add(myPane4);
         
         CenterPostsPane.setContent(postsGroup);
-        centerPane.getChildren().add(CenterPostsPane);
-        
-        
+//**********************************************************************************************************************************************
         Scene homePageScene  = new Scene(borderPane);
         primaryStage.setScene(homePageScene);
-        
         primaryStage.show();
       
     }
