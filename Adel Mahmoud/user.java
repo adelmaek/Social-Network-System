@@ -9,6 +9,11 @@ package socialnetwork;
  *
  * @author Adel Mahmoud
  */
+import java.io.FileInputStream;
+import java.util.Vector;
+import javafx.scene.image.Image;
+import java.io.FileNotFoundException;
+import java.util.LinkedList;
 import java.util.Vector;
 
 class Date_Of_Birth
