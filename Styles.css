@@ -20,3 +20,6 @@
 .text_field{
     -fx-border-color: #000000;
 }
+.choice-box.context-menu {
+               -fx-max-height: 200;
+}

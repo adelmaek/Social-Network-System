@@ -1,124 +1,154 @@
-package sample;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package socialnetwork;
 
-import javafx.application.Application;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.geometry.Orientation;
+import javafx.scene.Group;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import java.util.*;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+/**
+ *
+ * @author Adel Mahmoud
+ */
 
-public class Post {
-    private int user_id;
-    private Label post_label= new Label();
-    private String post_text;
-    private String post_user;
-    private Label user_label= new Label();
-    private VBox all_post= new VBox();
-    private Button like_button= new Button("Like");
-    private Button dislike_button= new Button("DisLike");
+ class Post {
+    //user postOwner;
+    String postOwner;
+    String postContent;
+    Map <String,String> comment;
+    Vector<Comment> postComments;
+    Vector<String> likes;
+    int numbOfLikes;
+    Vector<String> dislike;
+    int numbOfDislikes;
+    //May Add reactions.
+    VBox postArea;
+    Button likeButton;
+    Button disLikeButton;
+    TextArea addCommentText;
+    Button addComment;
+    Button viewComments;
+    Button viewReactions;
 
-
-   /* public Post ()
+    public Post()
     {
-        post_label.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 16));
-        post_label.setAlignment(Pos.CENTER);
-        post_label.setMaxWidth(600);
-        post_label.setPadding(new Insets(0,10,10,10));
-        post_label.setWrapText(true);
-        post_label.setText(post_text);
+        postArea= new VBox();
+        likeButton= new Button("Like");
+        disLikeButton= new Button("DisLike");
+        addCommentText= new TextArea();
+        addComment= new Button("Comment");
+    }
+    
+    public Post(String postContent,String user_name )
+    {
+        postArea= new VBox();
+        likeButton= new Button("Like");
+        disLikeButton= new Button("DisLike");
+        addCommentText= new TextArea();
+        addComment= new Button("Comment");
+        this.postOwner = user_name;
+        this.postContent = postContent;
+        numbOfLikes=0;
+        numbOfDislikes=0;
 
+        Label user_label= new Label(user_name);    //post user name
         user_label.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 16));
         user_label.setAlignment(Pos.CENTER_LEFT);
         user_label.autosize();
-        user_label.setPadding(new Insets(10,10,10,10));
-        user_label.setText(post_user);
+        user_label.setPadding(new Insets(5,5,5,5));
+        user_label.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius:3;" +
+                "-fx-border-color: #A9A9A9; -fx-border-width: 1;-fx-border-radius: 3 ;");
 
-        HBox hb_buttons=new HBox();
-        hb_buttons.getChildren().addAll(like_button,dislike_button);
-
-        all_post.getChildren().addAll(user_label,post_label,hb_buttons);
-
-
-    }*/
-
-    public  Post (String t, String u, int id)
-    {
-        post_text=t;
-        post_user=u;
-        user_id=id;
-
+        Label post_label = new Label(postContent);   //post text
         post_label.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 16));
         post_label.setAlignment(Pos.CENTER);
         post_label.setMaxWidth(600);
-        post_label.setPadding(new Insets(5,5,5,5));
+        post_label.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius:3;"+
+                        "-fx-border-color: #1E90FF; -fx-border-width: 1;-fx-border-radius: 3 ;");
+        post_label.setPadding(new Insets(10,10,10,10));
         post_label.setWrapText(true);
-        post_label.setText(post_text);
-        post_label.setStyle("-fx-background-color: #FFFFFF;-fx-background-radius: 4;" +
-                "-fx-border-color: #1E90FF; -fx-border-width: 1;-fx-border-radius: 4 ");
 
-        user_label.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 16));
-        user_label.setAlignment(Pos.TOP_LEFT);
-        user_label.autosize();
-        user_label.setPadding(new Insets(5,5,5,5));
-        user_label.setText(post_user);
-        user_label.setStyle("-fx-background-color: #FFFFFF;-fx-background-radius: 4;" +
-                "-fx-border-color: #A9A9A9; -fx-border-width: 1;-fx-border-radius: 4 ");
+        HBox hb_reactions = new HBox();       //for likes and dislikes
+        Label post_likes = new Label(String.valueOf(numbOfLikes));
+        post_likes.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.ITALIC, 12));
+        post_likes.setAlignment(Pos.CENTER_LEFT);
+        post_likes.autosize();
+        Label post_likes_word = new Label(" Likes, ");
+        post_likes_word.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.ITALIC, 12));
+        post_likes_word.setAlignment(Pos.CENTER_LEFT);
+        post_likes_word.autosize();
+        Label post_dislikes = new Label(String.valueOf(numbOfDislikes));
+        post_dislikes.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.ITALIC, 12));
+        post_dislikes.setAlignment(Pos.CENTER_LEFT);
+        post_dislikes.autosize();
+        Label post_dislikes_word = new Label(" DisLikes.        ");
+        post_dislikes_word.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.ITALIC, 12));
+        post_dislikes_word.setAlignment(Pos.CENTER_LEFT);
+        post_dislikes_word.autosize();
+        hb_reactions.getChildren().addAll(post_likes,post_likes_word,post_dislikes,post_dislikes_word,likeButton,
+                new Label("  "),disLikeButton);
+        hb_reactions.setPadding(new Insets(5,5,5,5));
+        hb_reactions.setMaxWidth(280);
+        hb_reactions.setAlignment(Pos.CENTER_LEFT);
+        hb_reactions.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius:3;");
 
-        HBox hb_buttons=new HBox();
-        hb_buttons.getChildren().addAll(like_button,dislike_button);
+        likeButton.setOnAction(e->{                         //increase no likes and dislkes when the buttons is pressed
+            if(disLikeButton.isDisabled()) {numbOfDislikes--;disLikeButton.setDisable(false);}
+            numbOfLikes++;
+            likeButton.setDisable(true);
+            post_likes.setText(String.valueOf(numbOfLikes));
+            post_dislikes.setText(String.valueOf(numbOfDislikes));
+                });
+        disLikeButton.setOnAction(e->{
+            if(likeButton.isDisabled()) {numbOfLikes--;likeButton.setDisable(false);}
+            numbOfDislikes++;
+            disLikeButton.setDisable(true);
+            post_likes.setText(String.valueOf(numbOfLikes));
+            post_dislikes.setText(String.valueOf(numbOfDislikes));
+        });
 
-        all_post.setSpacing(3);
-        all_post.getChildren().addAll(user_label,post_label,hb_buttons);
+        HBox hb_add_comments = new HBox();
+
+        TextArea ta_add_comments = new TextArea();
+        ta_add_comments.setMaxSize(400,60);
+        ta_add_comments.setWrapText(true);
+        ta_add_comments.setPromptText("Add a Comment...");
+        ta_add_comments.setPadding(new Insets(7,7,7,7));
+        ta_add_comments.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 13));
+
+        hb_add_comments.getChildren().addAll(ta_add_comments,addComment);
+        hb_add_comments.setSpacing(8);
+        hb_add_comments.setAlignment(Pos.CENTER_LEFT);
+
+        VBox vb_comments = new VBox();
+        vb_comments.setMaxWidth(500);
+        vb_comments.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius:3;");
+
+      //  for(int i=0 ; i<)
+
+        postArea.getChildren().addAll(user_label,post_label,hb_reactions,vb_comments,hb_add_comments);
+        postArea.setAlignment(Pos.CENTER_LEFT);
+        postArea.setSpacing(3);
 
     }
 
-    public VBox getAll_post() {
-        return all_post;
-    }
-
-    public Label getPost_label() {
-        return post_label;
-    }
-
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public String getPost_text() {
-        return post_text;
-    }
-    public String getPost_user() {
-        return post_user;
-    }
-    public Label getUser_label() {
-        return user_label;
-    }
-
-    public void setAll_post(VBox all_post) {
-        this.all_post = all_post;
-    }
-
-    public void setPost_label(Label post_label) {
-        this.post_label = post_label;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
-    public void setPost_text(String post_text) {
-        this.post_text = post_text;
-    }
-
-    public void setPost_user(String post_user) {
-        this.post_user = post_user;
-    }
-
-    public void setUser_label(Label user_label) {
-        this.user_label = user_label;
+    public VBox getPostArea() {
+        return postArea;
     }
 }

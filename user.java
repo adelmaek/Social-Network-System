@@ -1,4 +1,5 @@
-package com.company;
+package socialnetwork;
+
 import java.io.FileInputStream;
 import java.util.Vector;
 import javafx.scene.image.Image;
@@ -204,7 +205,7 @@ class user {
         Password= " ";
         ID=0;
         try {
-            ProfilePicture = new Image(new FileInputStream("E:/Mark/mpp.jpg")); // directory for default profile picture
+            ProfilePicture = new Image(new FileInputStream("E:/Mark/samaprofilepic.jpg")); // directory for default profile picture
         } catch (FileNotFoundException ex) {
             // handle exception...
         }
@@ -268,6 +269,16 @@ class user {
     public void setInfo(Informations info) {
         this.info = info;
     }
+    public void set_bd(Date_Of_Birth x){info.setDateOfBirth(x);}
+    public void set_status(Informations.MaritalStatus x){info.setStatus(x);}
+    public void set_gender(Informations.Gender x){info.setGender(x);}
+    public void set_city(String x) {info.setCity(x);}
+    public void set_bp (String x){info.setBirth_place(x);}
+    public void set_work(String x){info.setWork(x);}
+    public void set_college (String x){info.setCollege(x);}
+    public void set_school (String x){info.setSchool(x);}
+    public void add_lang (String x){info.addLanguage(x);}
+
 
     @Override
     public String toString() {
@@ -280,3 +291,20 @@ class user {
                 '}';
     }
 }
+
+class Comment
+{
+    private String comment;
+    private String commentOwner;
+
+    public Comment()
+    {
+
+    }
+    public Comment(String comment,String commentOwner)
+    {
+        this.comment = comment;
+        this.commentOwner = commentOwner;
+    }
+}
+

@@ -13,13 +13,12 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-
-
+import java.util.*;
 /**
  *
  * @author Adel Mahmoud
  */
-import java.util.*;
+
 public class Post {
     //user postOwner;
     String postOwner;
@@ -31,13 +30,14 @@ public class Post {
     Vector<String> dislike;
     int numbOfDislikes;
     //May Add reactions.
-    ScrollPane postArea;
-     Button likeButton;
+    Vbox postArea;
+    Button likeButton;
     Button disLikeButton;
     TextField addCommentText;
     Button addComment;
     Button viewComments;
     Button viewReactions;
+    int user_id;
     
     public Post(String postContent,String user_name )
     {
