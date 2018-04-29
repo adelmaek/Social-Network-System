@@ -1,0 +1,21 @@
+class groups
+{
+    private vector <user> members= new vector <user> ();
+    private user admin;
+    private vector <post> posts = new vector <post> ();
+    private string  group_name;
+
+    public groups (String group_name )
+    {
+        group_name=group_name;
+
+    }
+    public add_members( user member_name)
+    {
+        members.add(member_name);
+    }
+    public setadmin( String admin_name)
+    {
+        admin=admin_name;
+    }
+}
