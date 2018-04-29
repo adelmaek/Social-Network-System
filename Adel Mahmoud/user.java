@@ -9,6 +9,11 @@ package socialnetwork;
  *
  * @author Adel Mahmoud
  */
+import java.io.FileInputStream;
+import java.util.Vector;
+import javafx.scene.image.Image;
+import java.io.FileNotFoundException;
+import java.util.LinkedList;
 import java.util.Vector;
 
 class Date_Of_Birth
@@ -183,16 +188,29 @@ class Informations
     }
 }
 
-public class user {
+class user {
     private String username;
     private String Password;
     private int ID;
     private int NumberOfFriends = 0 ;
     private Vector <user> friends = new Vector <user> (50)  ;
-    private Informations info;
+    private Informations info= new Informations();
+    private Image ProfilePicture;
+    
+    public static final int hashTableSize =1000;
+    public static LinkedList<String>[] usersHashTable = new LinkedList[hashTableSize];
+       
+    
 
     public user() {
-
+        username=" ";
+        Password= " ";
+        ID=0;
+        try {
+            ProfilePicture = new Image(new FileInputStream("E:/Mark/mpp.jpg")); // directory for default profile picture
+        } catch (FileNotFoundException ex) {
+            // handle exception...
+        }
     }
 
     public user(String username, String password , int id ) {
@@ -233,6 +251,10 @@ public class user {
         NumberOfFriends = numberOfFriends;
     }
 
+    public Image getProfilePicture() {return ProfilePicture;}
+
+    public  void setProfilePicture(Image profilePicture) {ProfilePicture = profilePicture;}
+
     public void addFriend (user friend )
     {
 
@@ -259,6 +281,60 @@ public class user {
                 ", NumberOfFriends=" + NumberOfFriends +
                 ", info=" + info.toString()+
                 '}';
+    }
+    //************************Hash Function*******************************************************************
+    public static long  hashFunc(String user_name,int storageSize)
+    {
+        long  sum = 0;
+        int intLength = user_name.length() / 4;
+        for (int j = 0; j < intLength; j++) 
+        {
+            char c[] = user_name.substring(j * 4, (j * 4) + 4).toCharArray();
+             long mult = 1;
+            for (int k = 0; k < c.length; k++) 
+            {
+             sum += c[k] * mult;
+             mult *= 256;
+            }
+        }
+        char c[] = user_name.substring(intLength * 4).toCharArray();
+        long mult = 1;
+        for (int k = 0; k < c.length; k++) 
+        {
+            sum += c[k] * mult;
+            mult *= 256;
+        }
+
+     return(Math.abs(sum) % storageSize);
+    }
+    
+    public static boolean searchUsersHashTable(String user_name)
+    {
+        boolean found = false;
+       int hashNumber = (int)(hashFunc(user_name,hashTableSize));
+       if(usersHashTable[hashNumber]==null) found = false;
+       else
+        found=usersHashTable[hashNumber].contains(user_name);
+       return found;    
+    }  
+    public static boolean addToHashTable (String user_name)
+    {
+       boolean added =false;
+        if(searchUsersHashTable(user_name))
+            added = false;
+        else
+        {
+            int hashNumber = (int)(hashFunc(user_name,hashTableSize));
+            if(usersHashTable[hashNumber]==null)
+            {
+                usersHashTable[hashNumber] = new LinkedList();
+                usersHashTable[hashNumber].add(user_name);
+            }
+            else
+                usersHashTable[hashNumber].add(user_name);
+            added =true;
+        }
+        return added;
     }
 }
 class Comment
