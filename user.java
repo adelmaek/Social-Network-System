@@ -199,6 +199,8 @@ class user {
     private Vector <user> friends = new Vector <user> (50)  ;
     private Informations info= new Informations();
     private Image ProfilePicture;
+    private Vector<Group> groups= new Vector<>();
+    private Vector<Post> posts = new Vector<>();
 
     public user() {
         username=" ";
@@ -215,6 +217,40 @@ class user {
         this.username = username;
         Password = password;
         ID = id ;
+    }
+
+    public void add_post (Post p )
+    {
+        posts.add(p);
+    }
+
+    public void setPosts(Vector<Post> posts) {
+        this.posts = posts;
+    }
+
+    public Vector<Post> getPosts() {
+        return posts;
+    }
+
+    public void setFriends(Vector<user> friends) {
+        this.friends = friends;
+    }
+
+    public void setGroups(Vector<Group> groups) {
+        this.groups = groups;
+    }
+
+    public Vector<Group> getGroups() {
+        return groups;
+    }
+
+    public Vector<user> getFriends() {
+        return friends;
+    }
+
+    public void add_group(Group g)
+    {
+        groups.add(g);
     }
 
     public String getUsername() {
@@ -292,19 +328,5 @@ class user {
     }
 }
 
-class Comment
-{
-    private String comment;
-    private String commentOwner;
 
-    public Comment()
-    {
-
-    }
-    public Comment(String comment,String commentOwner)
-    {
-        this.comment = comment;
-        this.commentOwner = commentOwner;
-    }
-}
 

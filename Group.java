@@ -21,7 +21,7 @@ import javafx.scene.text.FontWeight;
 
 import java.io.FileNotFoundException;
 
-class Group {
+public class Group {
     private String name;
     private Vector<user> members;
     private user admin;
@@ -83,17 +83,25 @@ class Group {
     {
         BorderPane bp = new BorderPane();
 
+        BorderPane bp_top=new BorderPane();
         HBox hb=new HBox();                                                       //for the top bar
         hb.setAlignment(Pos.CENTER_RIGHT);
         hb.setSpacing(10);
         hb.setMinHeight(60);
         hb.setPadding(new Insets(10,20,10,10));
-        hb.setStyle(" -fx-background-color: #1E90FF;");
-        Button home_button = new Button("Home");
-        home_button.setPrefSize(60,30);
-        Button profile_button = new Button("Profile");
-        profile_button.setPrefSize(60,30);
-        hb.getChildren().addAll(home_button,profile_button);
+        bp_top.getStyleClass().add("top_bar");
+        SocialNetwork.home_button.setPrefSize(60,30);
+        SocialNetwork.profile_button.setPrefSize(60,30);
+        HBox hb_sn_name = new HBox();
+        Label l_sn_name = new Label("Our Social Network");
+        l_sn_name.setFont(Font.font("Serif", FontWeight.NORMAL, FontPosture.ITALIC, 30));
+        l_sn_name.setStyle("-fx-text-fill: #FFFFFF;");
+        hb_sn_name.getChildren().add(l_sn_name);
+        hb_sn_name.setAlignment(Pos.CENTER_LEFT);
+        hb_sn_name.setPadding(new Insets(10,10,10,20));
+        hb.getChildren().addAll(SocialNetwork.home_button,SocialNetwork.profile_button);
+        bp_top.setRight(hb);
+        bp_top.setLeft(hb_sn_name);
 
         VBox vb_left = new VBox();
         vb_left.setPadding(new Insets(40,10,10,40));
@@ -162,8 +170,10 @@ class Group {
 
         bp.setCenter(vb_center);
         bp.setLeft(vb_left);
-        bp.setTop(hb);
+        bp.setTop(bp_top);
         Scene scene = new Scene(bp);
+        scene.getStylesheets().add("Styles.css");
+        SocialNetwork.primaryStage_boundries_set_to_bounds_of_mainScreen(SocialNetwork.window);
         return  scene;
     }
 

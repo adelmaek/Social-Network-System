@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import java.util.*;
@@ -22,28 +23,30 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.stage.Stage;
+
 /**
  *
  * @author Adel Mahmoud
  */
 
  class Post {
-    //user postOwner;
-    String postOwner;
-    String postContent;
-    Map <String,String> comment;
-    Vector<Comment> postComments;
-    Vector<String> likes;
-    int numbOfLikes;
-    Vector<String> dislike;
+    //private user postOwner;
+    private String postOwner;
+    private String postContent;
+    //private Map <String,String> comment;
+    private Vector<Comment> postComments;
+    private Vector<String> likes;
+    private int numbOfLikes;
+    private Vector<String> dislike;
     int numbOfDislikes;
     //May Add reactions.
-    VBox postArea;
+    private VBox postArea;
     Button likeButton;
     Button disLikeButton;
     TextArea addCommentText;
     Button addComment;
-    Button viewComments;
+   // Button viewComments;
     Button viewReactions;
 
     public Post()
@@ -53,6 +56,11 @@ import javafx.geometry.Pos;
         disLikeButton= new Button("DisLike");
         addCommentText= new TextArea();
         addComment= new Button("Comment");
+       // viewComments = new Button("View Comments");
+        viewReactions= new Button("View Reactions");
+        postComments= new Vector<Comment>();
+        likes=new Vector<>();
+        dislike=new Vector<>();
     }
     
     public Post(String postContent,String user_name )
@@ -62,6 +70,11 @@ import javafx.geometry.Pos;
         disLikeButton= new Button("DisLike");
         addCommentText= new TextArea();
         addComment= new Button("Comment");
+       // viewComments = new Button("View Comments");
+        viewReactions= new Button("View Reactions");
+        postComments= new Vector<Comment>();
+        likes=new Vector<>();
+        dislike=new Vector<>();
         this.postOwner = user_name;
         this.postContent = postContent;
         numbOfLikes=0;
@@ -101,26 +114,30 @@ import javafx.geometry.Pos;
         post_dislikes_word.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.ITALIC, 12));
         post_dislikes_word.setAlignment(Pos.CENTER_LEFT);
         post_dislikes_word.autosize();
-        hb_reactions.getChildren().addAll(post_likes,post_likes_word,post_dislikes,post_dislikes_word,likeButton,
-                new Label("  "),disLikeButton);
+        hb_reactions.getChildren().addAll(post_likes,post_likes_word,post_dislikes,post_dislikes_word,
+                viewReactions,new Label("  "),likeButton, new Label("  "),disLikeButton);
         hb_reactions.setPadding(new Insets(5,5,5,5));
-        hb_reactions.setMaxWidth(280);
+        hb_reactions.setMaxWidth(400);
         hb_reactions.setAlignment(Pos.CENTER_LEFT);
         hb_reactions.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius:3;");
 
         likeButton.setOnAction(e->{                         //increase no likes and dislkes when the buttons is pressed
-            if(disLikeButton.isDisabled()) {numbOfDislikes--;disLikeButton.setDisable(false);}
+            if(disLikeButton.isDisabled()) {numbOfDislikes--;disLikeButton.setDisable(false);
+            dislike.remove(SocialNetwork.currentUser.getUsername());}
             numbOfLikes++;
             likeButton.setDisable(true);
             post_likes.setText(String.valueOf(numbOfLikes));
             post_dislikes.setText(String.valueOf(numbOfDislikes));
+            likes.add(SocialNetwork.currentUser.getUsername());
                 });
         disLikeButton.setOnAction(e->{
-            if(likeButton.isDisabled()) {numbOfLikes--;likeButton.setDisable(false);}
+            if(likeButton.isDisabled()) {numbOfLikes--;likeButton.setDisable(false);
+            likes.remove(SocialNetwork.currentUser.getUsername());}
             numbOfDislikes++;
             disLikeButton.setDisable(true);
             post_likes.setText(String.valueOf(numbOfLikes));
             post_dislikes.setText(String.valueOf(numbOfDislikes));
+            dislike.add(SocialNetwork.currentUser.getUsername());
         });
 
         HBox hb_add_comments = new HBox();
@@ -139,8 +156,56 @@ import javafx.geometry.Pos;
         VBox vb_comments = new VBox();
         vb_comments.setMaxWidth(500);
         vb_comments.setStyle("-fx-background-color: #FFFFFF; -fx-background-radius:3;");
+        for(Comment h:postComments)
+        {
+            vb_comments.getChildren().add(h.getComment_area());
+        }
 
-      //  for(int i=0 ; i<)
+        addComment.setOnAction(e->{
+            if(!ta_add_comments.getText().isEmpty())
+            {
+                Comment temp = new Comment(ta_add_comments.getText(),SocialNetwork.currentUser.getUsername());
+                postComments.add(temp);
+                vb_comments.getChildren().add(temp.getComment_area());
+                ta_add_comments.setText("");
+                ta_add_comments.setPromptText("Add a Comment...");
+            }
+                });
+        viewReactions.setOnAction(e->{
+            Stage stage_reactions = new Stage();
+            ScrollPane sp = new ScrollPane();
+            sp.setMaxSize(300,400);
+            VBox vb = new VBox();
+            sp.setContent(vb);
+            vb.setSpacing(7);
+            vb.setPadding(new Insets(10));
+            vb.setAlignment(Pos.TOP_CENTER);
+            vb.setMaxSize(280,380);
+            Label liketemp = new Label("Likes");
+            liketemp.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
+            vb.getChildren().add(liketemp);
+            for(String t:likes)
+            {
+                Label temp = new Label(t);
+                temp.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.ITALIC, 12));
+                vb.getChildren().add(temp);
+            }
+            Label disliketemp = new Label("DisLikes");
+            disliketemp.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.ITALIC, 12));
+            vb.getChildren().add(disliketemp);
+            for(String t:dislike)
+            {
+                Label temp = new Label(t);
+                temp.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.ITALIC, 12));
+                vb.getChildren().add(temp);
+            }
+            stage_reactions.setScene(new Scene(vb,300,400));
+            stage_reactions.showAndWait();
+
+
+
+        });
+
 
         postArea.getChildren().addAll(user_label,post_label,hb_reactions,vb_comments,hb_add_comments);
         postArea.setAlignment(Pos.CENTER_LEFT);
@@ -150,5 +215,57 @@ import javafx.geometry.Pos;
 
     public VBox getPostArea() {
         return postArea;
+    }
+}
+
+class Comment
+{
+    private String comment;
+    private String commentOwner;
+    private HBox comment_area;
+
+    public Comment()
+    {
+      comment_area=new HBox();
+    }
+    public Comment(String comment,String commentOwner)
+    {
+        this.comment = comment;
+        this.commentOwner = commentOwner;
+        comment_area=new HBox();
+        Label u_name = new Label(commentOwner+ " :  ");
+        u_name.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 13));
+        Label comment_t = new Label(comment);
+        comment_t.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 13));
+        comment_t.setWrapText(true);
+        comment_t.setMaxWidth(400);
+        comment_area.setAlignment(Pos.CENTER_LEFT);
+        comment_area.setPadding(new Insets(5));
+        comment_area.getChildren().addAll(u_name,comment_t);
+        comment_area.setMaxWidth(480);
+    }
+
+    public void setComment_area(HBox comment_area) {
+        this.comment_area = comment_area;
+    }
+
+    public HBox getComment_area() {
+        return comment_area;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setCommentOwner(String commentOwner) {
+        this.commentOwner = commentOwner;
+    }
+
+    public String getCommentOwner() {
+        return commentOwner;
     }
 }
