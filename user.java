@@ -191,7 +191,7 @@ class Informations
     }
 }
 
-class user {
+public class user {
     private String username;
     private String Password;
     private int ID;
@@ -207,17 +207,24 @@ class user {
         Password= " ";
         ID=0;
         try {
-            ProfilePicture = new Image(new FileInputStream("E:/Mark/samaprofilepic.jpg")); // directory for default profile picture
+            ProfilePicture = new Image(new FileInputStream("E:/Mark/mpp.jpg")); // directory for default profile picture
         } catch (FileNotFoundException ex) {
             // handle exception...
         }
     }
 
+
     public user(String username, String password , int id ) {
+        try {
+            ProfilePicture = new Image(new FileInputStream("E:/Mark/mpp.jpg")); // directory for default profile picture
+        } catch (FileNotFoundException ex) {
+            // handle exception...
+        }
         this.username = username;
         Password = password;
         ID = id ;
     }
+
 
     public void add_post (Post p )
     {

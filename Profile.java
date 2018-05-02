@@ -1,5 +1,7 @@
 package socialnetwork;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 import javafx.application.Application;
 import javafx.beans.InvalidationListener;
@@ -22,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -35,6 +38,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.shape.Rectangle;
 import java.util.Vector;
+import javafx.stage.FileChooser;
 
 import java.awt.*;
 import java.io.FileInputStream;
@@ -317,10 +321,38 @@ static int fa=0;
             change_info_window.showAndWait();
         });
 
+        Button change_pic = new Button("Change Profile Picture");
+
+        change_pic.setOnAction(e->{
+            Stage fc_stage = new Stage();
+            FileChooser fc = new FileChooser();
+            File f =fc.showOpenDialog(fc_stage);
+            String pic_path;
+            if(f!= null)
+            {
+               pic_path = f.getAbsolutePath();
+                try {
+                   Image new_pic= new Image(new FileInputStream(pic_path));
+                    x.setProfilePicture(new_pic);
+                    imageView.setImage(new_pic);
+                }
+                catch (FileNotFoundException ex) {
+                    // handle exception...
+                }
+
+
+            }
+
+        });
+
+        HBox hb_change = new HBox();
+        hb_change.setAlignment(Pos.CENTER);
+        hb_change.setSpacing(7);
+        hb_change.getChildren().addAll(change_info_button,change_pic);
         vb3.getChildren().addAll(vb2,vb4);
         if(x.getUsername()==SocialNetwork.currentUser.getUsername())
         {
-            vb3.getChildren().add(change_info_button);
+            vb3.getChildren().add(hb_change);
         }
 
         Label user_name= new Label();                   //user name
@@ -380,7 +412,7 @@ static int fa=0;
             if(!tf_posts.getText().isEmpty())
             {
                 Post temp = new Post(tf_posts.getText(),SocialNetwork.currentUser.getUsername());
-                x.add_post(temp);
+                x.getPosts().add(0,temp);
                 vb_posts.getChildren().add(0,temp.getPostArea());
             }
         });
@@ -393,7 +425,7 @@ static int fa=0;
         vb_right.setSpacing(10);
         Button b_add_friend = new Button("Add Friend");
         Button b_create_group= new Button("Create a Group");
-        if(x.getUsername()!=SocialNetwork.currentUser.getUsername())
+        if(x.getUsername()!=SocialNetwork.currentUser.getUsername()&& SocialNetwork.currentUser.getFriends().indexOf(x)==-1)
         {
             vb_right.getChildren().addAll(b_add_friend);
         }
@@ -410,15 +442,139 @@ static int fa=0;
         group_t.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         group_t.setOnMouseClicked(e->{
 
-            SocialNetwork.window.setScene(Group.Groups(group_t.getSelectionModel().getSelectedItem()));
-            SocialNetwork.window.setMaximized(true);
-
+            if(group_t.getSelectionModel().getSelectedItem()!=null) {
+                SocialNetwork.window.setScene(Group.Groups(group_t.getSelectionModel().getSelectedItem()));
+                SocialNetwork.window.setMaximized(true);
+            }
         });
+        Button b_view_friends = new Button("View Friends");
         vb_right.getChildren().add(group_t);
         if(x.getUsername()==SocialNetwork.currentUser.getUsername())
         {
             vb_right.getChildren().addAll(b_create_group);
         }
+        vb_right.getChildren().add(b_view_friends);
+
+        b_add_friend.setOnAction(e->{
+            x.addFriend(SocialNetwork.currentUser);
+            SocialNetwork.currentUser.addFriend(x);
+            label_no_friends.setText("Number of Friends: "+x.getNumberOfFriends());
+            vb_right.getChildren().remove(b_add_friend);
+
+        });
+
+        b_create_group.setOnAction(e->{
+            Stage stage_create_group= new Stage();
+            VBox vb_create_group = new VBox();
+            vb_create_group.setAlignment(Pos.TOP_CENTER);
+            vb_create_group.setPadding(new Insets(10));
+            vb_create_group.setSpacing(10);
+            HBox hb1 = new HBox();
+            hb1.setAlignment(Pos.CENTER_LEFT);
+            Label lhb1 = new Label("Group Name  ");
+            TextField thb1 = new TextField();
+            thb1.setMaxWidth(150);
+            hb1.getChildren().addAll(lhb1,thb1);
+            HBox hb2 = new HBox();
+            hb2.setAlignment(Pos.CENTER_LEFT);
+            Label lhb2 = new Label("Group Description  ");
+            TextArea thb2 = new TextArea();
+            thb2.setWrapText(true);
+            thb2.setMaxWidth(280);
+            thb2.setMaxHeight(100);
+            hb2.getChildren().addAll(lhb2);
+            Label add_to_group = new Label("Select People from your Friends to add to the Group");
+            ObservableList<String> friends_list_string = FXCollections.observableArrayList();
+            for(user u:x.getFriends())
+                friends_list_string.add(u.getUsername());
+            ListView<String> friends_list = new ListView<>(friends_list_string);
+            friends_list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+            friends_list.setMaxHeight(150);
+            friends_list.setMaxWidth(250);
+            Button create_group_done = new Button("Done");
+
+            create_group_done.setOnAction(e2->{
+                Group created_group =new Group();
+                if(thb1.getText().isEmpty())
+                {
+                    Stage error =new Stage();
+                    VBox vb_error =new VBox();
+                    Label l_error = new Label ("Please Enter Group Name!");
+                    vb_error.getChildren().add(l_error);
+                    vb_error.setSpacing(10);
+                    vb_error.setPadding(new Insets(10));
+                    Button b_error = new Button("Ok");
+                    vb_error.getChildren().add(b_error);
+                    vb_error.setAlignment(Pos.CENTER);
+                    b_error.setOnAction(e3->error.close());
+                    error.setScene(new Scene(vb_error,200,80));
+                    error.showAndWait();
+                }
+                else
+                {
+                    created_group.setName(thb1.getText());
+                }
+                if(!thb2.getText().isEmpty())
+                {
+                    created_group.setGroup_info(thb2.getText());
+                }
+                if(friends_list.getSelectionModel().getSelectedItems()!=null)
+                {
+                    ObservableList<String> friends_list2= friends_list.getSelectionModel().getSelectedItems();
+                    for(String s:friends_list2)
+                    {
+                        for(user u : x.getFriends())
+                        {
+                            if(u.getUsername()==s)
+                            {created_group.add_member(u);
+                            u.add_group(created_group);}
+                        }
+                    }
+
+                }
+                if(!thb1.getText().isEmpty()) {
+                    x.add_group(created_group);
+                    created_group.setAdmin(x);
+                    created_group.add_member(x);
+                    group_t.getItems().add(created_group);
+                    stage_create_group.close();
+                }
+            });
+
+            vb_create_group.getChildren().addAll(hb1,hb2,thb2,add_to_group,friends_list,create_group_done);
+            stage_create_group.setScene(new Scene(vb_create_group,350,400));
+            stage_create_group.showAndWait();
+        });
+
+        TableView<user> friends_list = new TableView<>();
+        Stage s_view_friends = new Stage();
+        b_view_friends.setOnAction(e->{
+
+            VBox vb=new VBox();
+            vb.setAlignment(Pos.CENTER);
+            vb.setPadding(new Insets(10));
+            TableColumn<user,String> c_friend_list = new TableColumn<>("Name");
+            c_friend_list.setStyle("-fx-alignment : center;");
+            c_friend_list.setMaxWidth(300);
+            c_friend_list.setCellValueFactory(new PropertyValueFactory<>("username"));
+
+            friends_list.setMaxHeight(300);
+            friends_list.setMaxWidth(250);
+            friends_list.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            friends_list.getColumns().add(c_friend_list);
+            friends_list.setItems(FXCollections.observableArrayList(x.getFriends()));
+            vb.getChildren().add(friends_list);
+            s_view_friends.setScene(new Scene(vb,270,320));
+            s_view_friends.showAndWait();
+
+        });
+        friends_list.setOnMouseClicked(e2->{
+
+            if(friends_list.getSelectionModel().getSelectedItem()!=null){
+            SocialNetwork.window.setScene(Profile(friends_list.getSelectionModel().getSelectedItem()));
+            s_view_friends.close();}
+
+        });
 
 
         bp.setRight(vb_right);

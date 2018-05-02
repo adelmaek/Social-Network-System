@@ -4,6 +4,7 @@ import javafx.application.Application;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.geometry.Rectangle2D;
 
@@ -12,6 +13,9 @@ import javafx.scene.layout.BorderPane;
 
 import javafx.stage.Screen;
 import socialnetwork.Post;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class SocialNetwork extends Application {
 
@@ -26,14 +30,16 @@ public class SocialNetwork extends Application {
         Sama.setUsername("sama");
         Sama.setPassword("***");
         user friend = new user("Perry","ll",1);
+        friend.addFriend(Sama);
+        friend.set_gender(Informations.Gender.female);
         Sama.addFriend(friend);
-        System.out.println(Sama.getNumberOfFriends());
+        //System.out.println(Sama.getNumberOfFriends());
         Informations Her = new Informations() ;
         Her.setGender(Informations.Gender.female);
         Her.setStatus(Informations.MaritalStatus.single);
         Her.addLanguage("french");
         Her.addLanguage("English");
-        System.out.println(Her.getNumberOfLanguages());
+        //System.out.println(Her.getNumberOfLanguages());
         Her.setBio("I LOVE FOOD ");
         Her.setCity("CAIRO");
         Her.setSchool("NDA");
@@ -43,7 +49,7 @@ public class SocialNetwork extends Application {
         Date_Of_Birth date_of_birth = new Date_Of_Birth(13,9,1996);
         Her.setDateOfBirth(date_of_birth);
         Sama.setInfo(Her);
-        System.out.println(Sama.toString());
+       // System.out.println(Sama.toString());
         egyfood.setName("Egyptian Foodies");
         egyfood.add_member(Sama);
         egyfood.add_member(friend);
@@ -72,6 +78,14 @@ public class SocialNetwork extends Application {
          Sama.add_post(new Post(test, "sama"));
          Sama.add_post(new Post(test2, "sama"));
         Sama.add_group(egyfood);
+        try {
+            Sama.setProfilePicture(new Image(new FileInputStream("E:/Mark/samaprofilepic.jpg")));
+        }
+        catch (FileNotFoundException ex) {
+            // handle exception...
+        }
+
+        //
         launch(args);
     }
    
