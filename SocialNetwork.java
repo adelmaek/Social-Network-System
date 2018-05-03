@@ -16,6 +16,7 @@ import socialnetwork.Post;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.LinkedList;
 
 public class SocialNetwork extends Application {
 
@@ -24,68 +25,110 @@ public class SocialNetwork extends Application {
      static Group egyfood = new Group();
      static Button home_button = new Button("Home");
      static Button profile_button = new Button("Profile");
-    
-    public static void main(String[] args) {
-        user Sama = new user() ;
-        Sama.setUsername("sama");
-        Sama.setPassword("***");
-        user friend = new user("Perry","ll",1);
-        friend.addFriend(Sama);
-        friend.set_gender(Informations.Gender.female);
-        Sama.addFriend(friend);
-        //System.out.println(Sama.getNumberOfFriends());
-        Informations Her = new Informations() ;
-        Her.setGender(Informations.Gender.female);
-        Her.setStatus(Informations.MaritalStatus.single);
-        Her.addLanguage("french");
-        Her.addLanguage("English");
-        //System.out.println(Her.getNumberOfLanguages());
-        Her.setBio("I LOVE FOOD ");
-        Her.setCity("CAIRO");
-        Her.setSchool("NDA");
-        Her.setCollege("ENG ASU");
-        Her.setBirth_place("Egypt");
-        Her.setWork("General Manager");
-        Date_Of_Birth date_of_birth = new Date_Of_Birth(13,9,1996);
-        Her.setDateOfBirth(date_of_birth);
-        Sama.setInfo(Her);
-       // System.out.println(Sama.toString());
-        egyfood.setName("Egyptian Foodies");
-        egyfood.add_member(Sama);
-        egyfood.add_member(friend);
-        egyfood.add_post(new Post("Hello","Mark"));
-        egyfood.add_post(new Post("Ana Ga3an","Mark"));
-        egyfood.setGroup_info("We search for the best restaurants in Egypt");
-        currentUser=Sama;
-        String test="Control System 2 Next section will be on Monday in 148\n" +
-                "Section 3 & 2 from 33824 to 33941: 12:30pm\n" +
-                "Section 1 & 2 from 33701 to 33823: 2:10pm\n" +
-                "OS section is in 291\n" +
-                "Section 3 & 2 from 33824 to 33941: 2:10pm\n" +
-                "Section 1 & 2 from 33701 to 33823: 12:30pm";
-        String test2 = "بكرة فيه شيفتين معمل للmultithreading و الdouble tank لسكشن 1 و 3\n" +
-                "\n" +
-                "دول اخر شيفتات للتجربتين دول\n" +
-                "\n" +
-                "اللي هيعوض عشان مجاش في ميعاده مش هياخد الدرجة كاملة هينقص درجة\n" +
-                "\n" +
-                "و المواعيد اول شيفت من 10 ل 1 و التاني من 1 و نص ل 4 و نص\n" +
-                "\n" +
-                "محدش يتأخر و محدش المفروض ييجي بدري ييجي متأخر\n" +
-                "\n" +
-                "اللي عندهم multithreading المفروض يعملوا اول 2 experiments في البيت قبل ما بيجو و بوريهملي في المعمل";
-         Sama.add_post(new Post("hello", "sama"));
-         Sama.add_post(new Post(test, "sama"));
-         Sama.add_post(new Post(test2, "sama"));
-        Sama.add_group(egyfood);
-        try {
-            Sama.setProfilePicture(new Image(new FileInputStream("E:/Mark/samaprofilepic.jpg")));
+
+    public static final int hashTableSize =1000;
+    public static LinkedList<user>[] usersHashTable = new LinkedList[hashTableSize];
+    public static LinkedList<socialnetwork.Group>[] groupHashTable = new LinkedList[hashTableSize];
+    //************************Hash Function*******************************************************************
+    public static long  hashFunc(String user_name,int storageSize)
+    {
+        long  sum = 0;
+        int intLength = user_name.length() / 4;
+        for (int j = 0; j < intLength; j++)
+        {
+            char c[] = user_name.substring(j * 4, (j * 4) + 4).toCharArray();
+            long mult = 1;
+            for (int k = 0; k < c.length; k++)
+            {
+                sum += c[k] * mult;
+                mult *= 256;
+            }
         }
-        catch (FileNotFoundException ex) {
-            // handle exception...
+        char c[] = user_name.substring(intLength * 4).toCharArray();
+        long mult = 1;
+        for (int k = 0; k < c.length; k++)
+        {
+            sum += c[k] * mult;
+            mult *= 256;
         }
 
-        //
+        return(Math.abs(sum) % storageSize);
+    }
+
+    public static user searchUsersHashTable(String user_name)
+    {
+        user found = null ;
+        int hashNumber = (int)(hashFunc(user_name,hashTableSize));
+        if(usersHashTable[hashNumber]==null) return found;
+        else{
+
+            for (user myUser:usersHashTable[hashNumber])
+            {
+                if(myUser.getUsername() == user_name)
+                {
+                    found = myUser;
+                }
+            }
+        }
+        return found;
+    }
+    public static boolean addToHashTable (user user_name)
+    {
+        boolean added =false;
+        if(searchUsersHashTable(user_name.getUsername())!=null)
+            added = false;
+        else
+        {
+            int hashNumber = (int)(hashFunc(user_name.getUsername(),hashTableSize));
+            if(usersHashTable[hashNumber]==null)
+            {
+                usersHashTable[hashNumber] = new LinkedList();
+                usersHashTable[hashNumber].add(user_name);
+            }
+            else
+                usersHashTable[hashNumber].add(user_name);
+            added =true;
+        }
+        return added;
+    }
+    public static socialnetwork.Group  searchGroupsHashTable(String group_name)
+    {
+        socialnetwork.Group found = null ;
+        int hashNumber = (int)(hashFunc(group_name,hashTableSize));
+        if(groupHashTable[hashNumber]==null) return found;
+        else{
+
+            for (socialnetwork.Group myUser:groupHashTable[hashNumber])
+            {
+                if(myUser.getName() == group_name)
+                {
+                    found = myUser;
+                }
+            }
+        }
+        return found;
+    }
+    public static boolean addToHashTable (Group user_name)
+    {
+        boolean added =false;
+        if(searchUsersHashTable(user_name.getName())!=null)
+            added = false;
+        else
+        {
+            int hashNumber = (int)(hashFunc(user_name.getName(),hashTableSize));
+            if(groupHashTable[hashNumber]==null)
+            {
+                groupHashTable[hashNumber] = new LinkedList();
+                groupHashTable[hashNumber].add(user_name);
+            }
+            else
+                groupHashTable[hashNumber].add(user_name);
+            added =true;
+        }
+        return added;
+    }
+    
+    public static void main(String[] args) {
         launch(args);
     }
    

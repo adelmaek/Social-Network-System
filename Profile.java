@@ -54,8 +54,6 @@ import javafx.scene.image.ImageView;
 
 public class Profile {
 
-static int fa=0;
-
     public static Scene Profile (user x)
     {
 
@@ -97,10 +95,6 @@ static int fa=0;
         vb2.getStyleClass().add("image_view");
         vb2.getChildren().addAll(imageView);
         vb2.setMaxHeight(imageView.getFitHeight());
-
-        // Rectangle padding1= new Rectangle(10,100); //
-        // padding1.setFill(Color.TRANSPARENT);
-        //padding1.setStroke(Color.TRANSPARENT);
 
         VBox vb4 = new VBox(); // for info
         vb4.getStyleClass().add("info_area");
@@ -262,48 +256,48 @@ static int fa=0;
             info_done.setOnAction(e2-> {
                 if (!(day.getSelectionModel().isEmpty()) && !(months.getSelectionModel().isEmpty()) && !(years.getSelectionModel().isEmpty()))
                 {
-                    x.set_bd(new Date_Of_Birth(Integer.valueOf(day.getValue()),Integer.valueOf(months.getValue().toString())
-                            ,Integer.valueOf(years.getValue().toString())));fa++;System.out.println(fa);
+                    x.getInfo().setDateOfBirth(new Date_Of_Birth(Integer.valueOf(day.getValue()),Integer.valueOf(months.getValue().toString())
+                            ,Integer.valueOf(years.getValue().toString())));
                    label_birthday.setText("Birthday: "+x.getInfo().getDateOfBirth().print());
                 }
                 if(!(cb_status.getSelectionModel().isEmpty()))
                 {
-                    x.set_status(cb_status.getValue());
+                    x.getInfo().setStatus(cb_status.getValue());
                     label_status.setText("Status: "+cb_status.getValue().toString());
                 }
                 if(!(cb_gender.getSelectionModel().isEmpty()))
                 {
-                    x.set_gender(cb_gender.getValue());
+                    x.getInfo().setGender(cb_gender.getValue());
                     label_gender.setText("Gender: "+cb_gender.getValue().toString());
                 }
                 if(!(ta_city.getText().isEmpty()))
                 {
-                    x.set_city(ta_city.getText());
+                    x.getInfo().setCity(ta_city.getText());
                     label_city.setText("City: "+ta_city.getText());
                 }
                 if(!(ta_bp.getText().isEmpty()))
                 {
-                    x.set_bp(ta_bp.getText());
+                    x.getInfo().setBirth_place(ta_bp.getText());
                     label_birth_place.setText("Birth Place: "+ta_bp.getText());
                 }
                 if(!(ta_work.getText().isEmpty()))
                 {
-                    x.set_work(ta_work.getText());
+                    x.getInfo().setWork(ta_work.getText());
                     label_work.setText("Work: "+ta_work.getText());
                 }
                 if(!(ta_college.getText().isEmpty()))
                 {
-                    x.set_college(ta_college.getText());
+                    x.getInfo().setCollege(ta_college.getText());
                     label_college.setText("College: "+ta_college.getText());
                 }
                 if(!(ta_school.getText().isEmpty()))
                 {
-                    x.set_school(ta_school.getText());
+                    x.getInfo().setSchool(ta_school.getText());
                     label_school.setText("School: "+ta_school.getText());
                 }
                 if(!(ta_lang.getText().isEmpty()))
                 {
-                    x.add_lang(ta_lang.getText());
+                    x.getInfo().addLanguage(ta_lang.getText());
                     label_lang.setText(label_lang.getText()+", "+ta_lang.getText());
                 }
 
@@ -339,10 +333,7 @@ static int fa=0;
                 catch (FileNotFoundException ex) {
                     // handle exception...
                 }
-
-
             }
-
         });
 
         HBox hb_change = new HBox();
@@ -414,6 +405,8 @@ static int fa=0;
                 Post temp = new Post(tf_posts.getText(),SocialNetwork.currentUser.getUsername());
                 x.getPosts().add(0,temp);
                 vb_posts.getChildren().add(0,temp.getPostArea());
+                tf_posts.setText("");
+                tf_posts.setPromptText("Write a Post....");
             }
         });
 
@@ -425,27 +418,28 @@ static int fa=0;
         vb_right.setSpacing(10);
         Button b_add_friend = new Button("Add Friend");
         Button b_create_group= new Button("Create a Group");
-        if(x.getUsername()!=SocialNetwork.currentUser.getUsername()&& SocialNetwork.currentUser.getFriends().indexOf(x)==-1)
+        if(x.getUsername()!=SocialNetwork.currentUser.getUsername() &&
+                SocialNetwork.currentUser.getFriends_names().indexOf(x.getUsername())==-1)
         {
             vb_right.getChildren().addAll(b_add_friend);
         }
-        TableColumn<Group,String>  groups_c= new TableColumn<>("Groups");    /////groups
+        TableColumn<String,String>  groups_c= new TableColumn<>("Groups");    /////groups
         groups_c.setMaxWidth(150);
+        groups_c.setCellValueFactory(data->new SimpleStringProperty(data.getValue()));
         groups_c.setStyle("-fx-alignment: center;");
-        groups_c.setCellValueFactory(new PropertyValueFactory<>("name"));
-        TableView<Group> group_t = new TableView<>();
+        TableView<String> group_t = new TableView<>();
         group_t.getColumns().addAll(groups_c);
-        group_t.setItems(FXCollections.observableArrayList(x.getGroups()));
+        group_t.setItems(FXCollections.observableArrayList(x.getGroups_names()));
         group_t.setMaxHeight(400);
         group_t.setPadding(new Insets(10));
         group_t.setMaxWidth(170);
         group_t.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         group_t.setOnMouseClicked(e->{
 
-            if(group_t.getSelectionModel().getSelectedItem()!=null) {
-                SocialNetwork.window.setScene(Group.Groups(group_t.getSelectionModel().getSelectedItem()));
-                SocialNetwork.window.setMaximized(true);
-            }
+        if(group_t.getSelectionModel().getSelectedItem()!=null) {
+        SocialNetwork.window.setScene(Group.Groups(SocialNetwork.searchGroupsHashTable(group_t.getSelectionModel().getSelectedItem())));
+        SocialNetwork.window.setMaximized(true);
+        }
         });
         Button b_view_friends = new Button("View Friends");
         vb_right.getChildren().add(group_t);
@@ -455,13 +449,7 @@ static int fa=0;
         }
         vb_right.getChildren().add(b_view_friends);
 
-        b_add_friend.setOnAction(e->{
-            x.addFriend(SocialNetwork.currentUser);
-            SocialNetwork.currentUser.addFriend(x);
-            label_no_friends.setText("Number of Friends: "+x.getNumberOfFriends());
-            vb_right.getChildren().remove(b_add_friend);
 
-        });
 
         b_create_group.setOnAction(e->{
             Stage stage_create_group= new Stage();
@@ -484,10 +472,7 @@ static int fa=0;
             thb2.setMaxHeight(100);
             hb2.getChildren().addAll(lhb2);
             Label add_to_group = new Label("Select People from your Friends to add to the Group");
-            ObservableList<String> friends_list_string = FXCollections.observableArrayList();
-            for(user u:x.getFriends())
-                friends_list_string.add(u.getUsername());
-            ListView<String> friends_list = new ListView<>(friends_list_string);
+            ListView<String> friends_list = new ListView<>(FXCollections.observableArrayList(x.getFriends_names()));
             friends_list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             friends_list.setMaxHeight(150);
             friends_list.setMaxWidth(250);
@@ -523,20 +508,20 @@ static int fa=0;
                     ObservableList<String> friends_list2= friends_list.getSelectionModel().getSelectedItems();
                     for(String s:friends_list2)
                     {
-                        for(user u : x.getFriends())
-                        {
-                            if(u.getUsername()==s)
-                            {created_group.add_member(u);
-                            u.add_group(created_group);}
-                        }
+                        user u = SocialNetwork.searchUsersHashTable(s) ;
+                        created_group.add_member(u.getUsername());
+                        u.add_group(created_group.getName());
+
                     }
 
                 }
                 if(!thb1.getText().isEmpty()) {
-                    x.add_group(created_group);
-                    created_group.setAdmin(x);
-                    created_group.add_member(x);
-                    group_t.getItems().add(created_group);
+                    x.add_group(created_group.getName());
+                    created_group.setAdmin(x.getUsername());
+                    created_group.add_member(x.getUsername());
+                    SocialNetwork.addToHashTable(created_group);
+                    group_t.getItems().add(created_group.getName());
+                    group_t.refresh();
                     stage_create_group.close();
                 }
             });
@@ -546,23 +531,23 @@ static int fa=0;
             stage_create_group.showAndWait();
         });
 
-        TableView<user> friends_list = new TableView<>();
+        TableView<String> friends_list = new TableView<>();
+        TableColumn<String,String> c_friend_list = new TableColumn<>("Name");
+        c_friend_list.setCellValueFactory(data->new SimpleStringProperty(data.getValue()));
+        c_friend_list.setStyle("-fx-alignment : center;");
+        c_friend_list.setMaxWidth(300);
+        friends_list.setMaxHeight(300);
+        friends_list.setMaxWidth(250);
+        friends_list.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        friends_list.setItems(FXCollections.observableArrayList(x.getFriends_names()));
+        friends_list.getColumns().add(c_friend_list);
         Stage s_view_friends = new Stage();
         b_view_friends.setOnAction(e->{
 
             VBox vb=new VBox();
             vb.setAlignment(Pos.CENTER);
             vb.setPadding(new Insets(10));
-            TableColumn<user,String> c_friend_list = new TableColumn<>("Name");
-            c_friend_list.setStyle("-fx-alignment : center;");
-            c_friend_list.setMaxWidth(300);
-            c_friend_list.setCellValueFactory(new PropertyValueFactory<>("username"));
-
-            friends_list.setMaxHeight(300);
-            friends_list.setMaxWidth(250);
-            friends_list.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            friends_list.getColumns().add(c_friend_list);
-            friends_list.setItems(FXCollections.observableArrayList(x.getFriends()));
+            friends_list.refresh();
             vb.getChildren().add(friends_list);
             s_view_friends.setScene(new Scene(vb,270,320));
             s_view_friends.showAndWait();
@@ -571,11 +556,20 @@ static int fa=0;
         friends_list.setOnMouseClicked(e2->{
 
             if(friends_list.getSelectionModel().getSelectedItem()!=null){
-            SocialNetwork.window.setScene(Profile(friends_list.getSelectionModel().getSelectedItem()));
+            SocialNetwork.window.setScene(Profile(SocialNetwork.searchUsersHashTable(friends_list.getSelectionModel().getSelectedItem())));
             s_view_friends.close();}
 
         });
 
+        b_add_friend.setOnAction(e->{
+            x.addFriend(SocialNetwork.currentUser.getUsername());
+            SocialNetwork.currentUser.addFriend(x.getUsername());
+            label_no_friends.setText("Number of Friends: "+x.getNumberOfFriends());
+            vb_right.getChildren().remove(b_add_friend);
+            friends_list.getItems().add(SocialNetwork.currentUser.getUsername());
+            friends_list.refresh();
+
+        });
 
         bp.setRight(vb_right);
         bp.setCenter(vb1);

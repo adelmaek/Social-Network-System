@@ -1,9 +1,12 @@
 package socialnetwork;
 
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import javafx.scene.image.Image;
 import java.io.FileNotFoundException;
+import static java.lang.Math.toIntExact;
 
 class Date_Of_Birth
 {
@@ -194,18 +197,16 @@ class Informations
 public class user {
     private String username;
     private String Password;
-    private int ID;
     private int NumberOfFriends = 0 ;
-    private Vector <user> friends = new Vector <user> (50)  ;
+    private Vector<String> friends_names = new Vector<>();
     private Informations info= new Informations();
     private Image ProfilePicture;
-    private Vector<Group> groups= new Vector<>();
+    private Vector<String> groups_names= new Vector<>();
     private Vector<Post> posts = new Vector<>();
 
     public user() {
         username=" ";
         Password= " ";
-        ID=0;
         try {
             ProfilePicture = new Image(new FileInputStream("E:/Mark/mpp.jpg")); // directory for default profile picture
         } catch (FileNotFoundException ex) {
@@ -214,7 +215,7 @@ public class user {
     }
 
 
-    public user(String username, String password , int id ) {
+    public user(String username, String password) {
         try {
             ProfilePicture = new Image(new FileInputStream("E:/Mark/mpp.jpg")); // directory for default profile picture
         } catch (FileNotFoundException ex) {
@@ -222,7 +223,6 @@ public class user {
         }
         this.username = username;
         Password = password;
-        ID = id ;
     }
 
 
@@ -239,25 +239,23 @@ public class user {
         return posts;
     }
 
-    public void setFriends(Vector<user> friends) {
-        this.friends = friends;
+
+    public void setFriends_names(Vector<String> friends_names) {
+        this.friends_names = friends_names;
     }
 
-    public void setGroups(Vector<Group> groups) {
-        this.groups = groups;
+    public Vector<String> getFriends_names() {
+        return friends_names;
     }
 
-    public Vector<Group> getGroups() {
-        return groups;
+    public void setInfo(Informations info) {
+        this.info = info;
     }
 
-    public Vector<user> getFriends() {
-        return friends;
-    }
 
-    public void add_group(Group g)
+    public void add_group(String g)
     {
-        groups.add(g);
+        groups_names.add(g);
     }
 
     public String getUsername() {
@@ -276,13 +274,6 @@ public class user {
         Password = password;
     }
 
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
 
     public int getNumberOfFriends() {
         return NumberOfFriends;
@@ -296,39 +287,31 @@ public class user {
 
     public  void setProfilePicture(Image profilePicture) {ProfilePicture = profilePicture;}
 
-    public void addFriend (user friend )
+    public void addFriend (String friend )
     {
 
-
-        friends.add(friend);
+        friends_names.add(friend);
         this.NumberOfFriends++ ;
 
+    }
+
+    public void setGroups_names(Vector<String> groups_names) {
+        this.groups_names = groups_names;
+    }
+
+    public Vector<String> getGroups_names() {
+        return groups_names;
     }
 
     public Informations getInfo() {
         return info;
     }
 
-    public void setInfo(Informations info) {
-        this.info = info;
-    }
-    public void set_bd(Date_Of_Birth x){info.setDateOfBirth(x);}
-    public void set_status(Informations.MaritalStatus x){info.setStatus(x);}
-    public void set_gender(Informations.Gender x){info.setGender(x);}
-    public void set_city(String x) {info.setCity(x);}
-    public void set_bp (String x){info.setBirth_place(x);}
-    public void set_work(String x){info.setWork(x);}
-    public void set_college (String x){info.setCollege(x);}
-    public void set_school (String x){info.setSchool(x);}
-    public void add_lang (String x){info.addLanguage(x);}
-
-
     @Override
     public String toString() {
         return "user{" +
                 "username='" + username + '\'' +
                 ", Password='" + Password + '\'' +
-                ", ID=" + ID +
                 ", NumberOfFriends=" + NumberOfFriends +
                 ", info=" + info.toString()+
                 '}';

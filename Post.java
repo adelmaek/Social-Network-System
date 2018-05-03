@@ -31,7 +31,6 @@ import javafx.stage.Stage;
  */
 
  class Post {
-    //private user postOwner;
     private String postOwner;
     private String postContent;
     //private Map <String,String> comment;
@@ -48,7 +47,6 @@ import javafx.stage.Stage;
     Button addComment;
    // Button viewComments;
     Button viewReactions;
-
     public Post()
     {
         postArea= new VBox();
@@ -62,8 +60,12 @@ import javafx.stage.Stage;
         likes=new Vector<>();
         dislike=new Vector<>();
     }
-    
-    public Post(String postContent,String user_name )
+
+    public String getPostContent() {
+        return postContent;
+    }
+
+    public Post(String postContent, String user_name )
     {
         postArea= new VBox();
         likeButton= new Button("Like");
