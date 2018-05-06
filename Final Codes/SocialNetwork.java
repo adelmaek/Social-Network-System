@@ -15,7 +15,6 @@ import javafx.scene.image.Image;
 
 
 import javafx.scene.layout.BorderPane;
-
 import javafx.stage.Screen;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,9 +28,7 @@ public class SocialNetwork extends Application {
      public static Stage window;
      public static user currentUser = new user();
      public static Image image ;
-     
-     public static Button home_button;
-     public static Button profile_button;
+
      
      public static final int hashTableSize =1000;
     public static LinkedList<user>[] usersHashTable = new LinkedList[hashTableSize];
@@ -73,7 +70,7 @@ public class SocialNetwork extends Application {
        
        for (user myUser:usersHashTable[hashNumber])
        {
-           if(myUser.getUsername() == user_name)
+           if(myUser.getUsername().equals(user_name) )
            {
                found = myUser;
            }
@@ -96,6 +93,8 @@ public class SocialNetwork extends Application {
             {
                 
                 usersHashTable[hashNumber] = new LinkedList<user>();
+                //System.out.println("putting: "+user_name.getUsername());
+                //System.out.println(hashNumber);
                 usersHashTable[hashNumber].add(user_name);
             }
             else{
@@ -141,7 +140,7 @@ public class SocialNetwork extends Application {
         return added;
     }
 //***********************************************************Salma's part****************************************************************
-   
+
     private static Scanner x;
     public static JSONArray USERS = new JSONArray();
 
@@ -225,7 +224,7 @@ public class SocialNetwork extends Application {
         user parsed = new user();
         try {
 
-            Object obj = parser.parse(new FileReader("UsersFileKolena.json"));
+            Object obj = parser.parse(new FileReader("C:/Users/Mark/IdeaProjects/SN/src/socialnetwork/UsersFileKolena.json"));
             // JSONObject jsonObject =  (JSONObject) obj;
             JSONArray arrayofusers = (JSONArray) obj;
             int index = 0;
@@ -331,15 +330,16 @@ public class SocialNetwork extends Application {
     public static void ReadUsersFromFile() {
 
         JSONParser parser = new JSONParser();
-        user parsed = new user();
+
         try {
 
-            Object obj = parser.parse(new FileReader("UsersFileKolena.json"));
+            Object obj = parser.parse(new FileReader("C:/Users/Mark/IdeaProjects/SN/src/socialnetwork/UsersFileKolena.json"));
             // JSONObject jsonObject =  (JSONObject) obj;
             JSONArray arrayofusers = (JSONArray) obj;
 
             int index = 0;
             for (int i = 0; i < arrayofusers.size(); i++) {
+                user parsed = new user();
                 JSONObject Userobj1 = (JSONObject) arrayofusers.get(i);
                 JSONObject Userobjgowa1 = (JSONObject) Userobj1.get("Users");
                 JSONObject Userobj = (JSONObject) arrayofusers.get(i);
@@ -417,7 +417,7 @@ public class SocialNetwork extends Application {
 
 
                 parsed.setInfo(info);
-                System.out.print(parsed);
+               // System.out.println(parsed);
                 addToHashTable(parsed);
 
 
@@ -436,8 +436,22 @@ public class SocialNetwork extends Application {
     public static void main(String[] args) {
         
         ReadUsersFromFile();
-        //System.out.println(searchUsersHashTable("Perry"));
-        //System.out.println(usersHashTable[432].get(0));
+
+        for(int i=0; i<hashTableSize;i++)
+        {
+            LinkedList<user> l = usersHashTable[i];
+            if(l!=null)
+            {
+                for (user u : l)
+                {
+                    System.out.println(u.getUsername()+" "+ u.getInfo().getSchool());
+                    System.out.println(i);
+                    //System.out.println(hashFunc(u.getUsername(),hashTableSize));
+
+                }
+
+            }
+        }
          launch(args);     
     }
    

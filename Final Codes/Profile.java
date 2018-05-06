@@ -71,8 +71,10 @@ public class Profile {
         hb.setMinHeight(60);
         hb.setPadding(new Insets(10,20,10,10));
         bp_top.getStyleClass().add("top_bar");
-        SocialNetwork.home_button.setPrefSize(60,30);
-        SocialNetwork.profile_button.setPrefSize(60,30);
+        Button home_button=new Button("Home");
+        Button profile_button=new Button("Profile");
+        home_button.setPrefSize(60,30);
+        profile_button.setPrefSize(60,30);
         HBox hb_sn_name = new HBox();
         Label l_sn_name = new Label("Our Social Network");
         l_sn_name.setFont(Font.font("Serif", FontWeight.NORMAL, FontPosture.ITALIC, 30));
@@ -80,9 +82,17 @@ public class Profile {
         hb_sn_name.getChildren().add(l_sn_name);
         hb_sn_name.setAlignment(Pos.CENTER_LEFT);
         hb_sn_name.setPadding(new Insets(10,10,10,20));
-        hb.getChildren().addAll(SocialNetwork.home_button,SocialNetwork.profile_button);
+        hb.getChildren().addAll(home_button,profile_button);
         bp_top.setRight(hb);
         bp_top.setLeft(hb_sn_name);
+        home_button.setOnAction(e->{
+            SocialNetwork.window.setScene(new HomePage().homePage(SocialNetwork.currentUser));
+            SocialNetwork.window.setMaximized(true);
+        });
+        profile_button.setOnAction(e->{
+            SocialNetwork.window.setScene(Profile(SocialNetwork.currentUser));
+            SocialNetwork.window.setMaximized(true);
+        });
 
 
 
@@ -279,31 +289,43 @@ public class Profile {
                 {
                     x.getInfo().setCity(ta_city.getText());
                     label_city.setText("City: "+ta_city.getText());
+                    if(vb4.getChildren().indexOf(label_city)==-1)
+                        vb4.getChildren().add(label_city);
                 }
                 if(!(ta_bp.getText().isEmpty()))
                 {
                     x.getInfo().setBirth_place(ta_bp.getText());
                     label_birth_place.setText("Birth Place: "+ta_bp.getText());
+                    if(vb4.getChildren().indexOf(label_birth_place)==-1)
+                        vb4.getChildren().add(label_birth_place);
                 }
                 if(!(ta_work.getText().isEmpty()))
                 {
                     x.getInfo().setWork(ta_work.getText());
                     label_work.setText("Work: "+ta_work.getText());
+                    if(vb4.getChildren().indexOf(label_work)==-1)
+                        vb4.getChildren().add(label_work);
                 }
                 if(!(ta_college.getText().isEmpty()))
                 {
                     x.getInfo().setCollege(ta_college.getText());
                     label_college.setText("College: "+ta_college.getText());
+                    if(vb4.getChildren().indexOf(label_college)==-1)
+                        vb4.getChildren().add(label_college);
                 }
                 if(!(ta_school.getText().isEmpty()))
                 {
                     x.getInfo().setSchool(ta_school.getText());
                     label_school.setText("School: "+ta_school.getText());
+                    if(vb4.getChildren().indexOf(label_school)==-1)
+                        vb4.getChildren().add(label_school);
                 }
                 if(!(ta_lang.getText().isEmpty()))
                 {
                     x.getInfo().addLanguage(ta_lang.getText());
                     label_lang.setText(label_lang.getText()+", "+ta_lang.getText());
+                    if(vb4.getChildren().indexOf(label_lang)==-1)
+                        vb4.getChildren().add(label_lang);
                 }
 
                 change_info_window.close();

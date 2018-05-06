@@ -85,10 +85,10 @@ public class LoginPage {
         loginButton.setOnAction(e->{
         String username = loginUsername.getText();
             String Password = loginPassword.getText();
-            //user loggeduser=SocialNetwork.searchUsersHashTable(username);
+            user loggeduser=SocialNetwork.searchUsersHashTable(username);
             
-           // System.out.println(SocialNetwork.usersHashTable[444].get(0));
-                user loggeduser = SocialNetwork.usersHashTable[444].get(0);
+           System.out.println(SocialNetwork.searchUsersHashTable(username));
+              // user loggeduser = SocialNetwork.usersHashTable[432].get(0);
                
             if(loggeduser==null)
             {

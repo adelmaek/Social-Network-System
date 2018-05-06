@@ -226,7 +226,7 @@ public class HomePage {
                          myFriendButton[i].setText(aFriend.getUsername());
                
                         myFriendButton[i].setOnAction(ee->{
-                                 SocialNetwork.window.setScene(SocialNetwork.profile(aFriend)); // Replace with marks function 
+                                 SocialNetwork.window.setScene(Profile.Profile(aFriend)); // Replace with marks function
                             });
                         myFriendVBox[i] = new VBox();
                         myFriendVBox[i].setSpacing(5);

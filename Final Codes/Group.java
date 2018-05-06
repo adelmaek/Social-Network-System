@@ -117,8 +117,10 @@ public class Group {
         hb.setMinHeight(60);
         hb.setPadding(new Insets(10,20,10,10));
         bp_top.getStyleClass().add("top_bar");
-        SocialNetwork.home_button.setPrefSize(60,30);
-        SocialNetwork.profile_button.setPrefSize(60,30);
+        Button home_button=new Button("Home");
+        Button profile_button=new Button("Profile");
+        home_button.setPrefSize(60,30);
+        profile_button.setPrefSize(60,30);
         HBox hb_sn_name = new HBox();
         Label l_sn_name = new Label("Our Social Network");
         l_sn_name.setFont(Font.font("Serif", FontWeight.NORMAL, FontPosture.ITALIC, 30));
@@ -126,9 +128,17 @@ public class Group {
         hb_sn_name.getChildren().add(l_sn_name);
         hb_sn_name.setAlignment(Pos.CENTER_LEFT);
         hb_sn_name.setPadding(new Insets(10,10,10,20));
-        hb.getChildren().addAll(SocialNetwork.home_button,SocialNetwork.profile_button);
+        hb.getChildren().addAll(home_button,profile_button);
         bp_top.setRight(hb);
         bp_top.setLeft(hb_sn_name);
+        home_button.setOnAction(e->{
+            SocialNetwork.window.setScene(new HomePage().homePage(SocialNetwork.currentUser));
+            SocialNetwork.window.setMaximized(true);
+        });
+        profile_button.setOnAction(e->{
+            SocialNetwork.window.setScene(Profile.Profile(SocialNetwork.currentUser));
+            SocialNetwork.window.setMaximized(true);
+        });
 
         VBox vb_left = new VBox();
         vb_left.setPadding(new Insets(40,10,10,40));
