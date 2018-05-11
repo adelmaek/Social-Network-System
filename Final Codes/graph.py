@@ -23,8 +23,8 @@ for i in range (len(data)):
 
 for i in range (len(data)):
     name = data[i]['Users']['Username']
-    for j in range (len(data[0]['Users']['Friends'])):
-        graph.add_edge(data[i]['Users']['Username'],data[0]['Users']['Friends'][j])
+    for j in range (len(data[i]['Users']['Friends'])):
+        graph.add_edge(data[i]['Users']['Username'],data[i]['Users']['Friends'][j])
         
 nx.draw(graph,node_color='#A0CBE2',edge_color='#A0CB77',width=2,with_labels = True)
 plt.savefig("graph.png") # save as png
