@@ -21,6 +21,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import socialnetwork.SocialNetwork;
+
+import java.io.IOException;
+
 import static socialnetwork.SocialNetwork.window;
 
 /**
@@ -30,7 +33,7 @@ import static socialnetwork.SocialNetwork.window;
 public class LoginPage {
     Button loginButton;
     Button registerButton;
-
+    Button VisualizeButton;
     BorderPane page = new BorderPane();
 
     Label registerLabel;
@@ -66,9 +69,17 @@ public class LoginPage {
    
    private void setTop()
     {
-        HBox top = new HBox(400);
+        HBox top = new HBox(300);
 
+        Button VisualizeButton = new Button ("  Users graph  ");
+        VisualizeButton.setOnAction(e->{
 
+            try {
+                Process P = Runtime.getRuntime().exec("python graph.py");
+            } catch (IOException e1) {
+                //
+            }
+        });
 
         NameOfApp = new Label ("    Our Social Network");
         NameOfApp.setStyle("-fx-font:40px \"Serif\";\n" + "-fx-text-fill: white;");
@@ -113,7 +124,7 @@ public class LoginPage {
         loginPassword = new PasswordField();
         loginPassword.setPromptText("Enter your password");
 
-        login.getChildren().addAll(loginLabel,loginUsername,loginPassword,loginButton);
+        login.getChildren().addAll(loginLabel,loginUsername,loginPassword,loginButton,VisualizeButton);
         login.setAlignment(Pos.CENTER);
 
         top.getChildren().addAll(NameOfApp,login);
