@@ -13,7 +13,7 @@ def random_color():
     random.shuffle(rgbl)
     return tuple(rgbl)
 
-with open('UsersFileKolena.json') as f:
+with open('UsersFileKolena.json',encoding="utf8") as f:
     data = json.load(f)
 
 graph = nx.Graph()
@@ -29,6 +29,6 @@ for i in range (len(data)):
 for i in range (len(nx.nodes(graph))):
     rand_color = randomcolor.RandomColor()
     
-nx.draw(graph,node_color='#cc6699',font_size=10,node_size=1500,edge_color='#000066',width=2,with_labels = True)
+nx.draw(graph,node_color='#4da6ff',font_size=10,node_size=500,edge_color='#99d6ff',width=0.5,with_labels = True)
 plt.savefig("graph.png") # save as png
 plt.show() # display
