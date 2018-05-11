@@ -1,9 +1,7 @@
 
 package socialnetwork;
 import java.io.FileReader;
-import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
 
 import javafx.application.Application;
 
@@ -29,7 +27,8 @@ public class SocialNetwork extends Application {
      public static user currentUser = new user();
      public static Image image ;
 
-     
+     public static Vector <user> UsersInSystem = new Vector<user> ();
+     public static Map < String , Map< String, Integer >> adjencyMatrix;
      public static final int hashTableSize =1000;
     public static LinkedList<user>[] usersHashTable = new LinkedList[hashTableSize];
     public static LinkedList<socialnetwork.Group>[] groupHashTable = new LinkedList[hashTableSize];
@@ -333,7 +332,7 @@ public class SocialNetwork extends Application {
 
         try {
 
-            Object obj = parser.parse(new FileReader("C:/Users/Mark/IdeaProjects/SN/src/socialnetwork/UsersFileKolena.json"));
+            Object obj = parser.parse(new FileReader("UsersFileKolena.json"));
             // JSONObject jsonObject =  (JSONObject) obj;
             JSONArray arrayofusers = (JSONArray) obj;
 
@@ -418,9 +417,33 @@ public class SocialNetwork extends Application {
 
                 parsed.setInfo(info);
                // System.out.println(parsed);
+                UsersInSystem.add(parsed);
                 addToHashTable(parsed);
 
 
+            }
+             adjencyMatrix = new HashMap<String, Map<String, Integer>>();
+
+            for (user i : UsersInSystem )
+            {
+                Map<String,Integer> in = new HashMap<String,Integer>();
+                for (user j: UsersInSystem)
+                {
+
+                    in.put(j.getUsername(),0);
+
+                }
+                adjencyMatrix.put(i.getUsername(), in );
+            }
+
+            for (user i : UsersInSystem ) {
+                Map<String,Integer> in = new HashMap<String,Integer>();
+                for (String j : i.getFriends())
+                {
+                    Map x = adjencyMatrix.get(i.getUsername());
+                    x.put(j,1);
+                    adjencyMatrix.put(i.getUsername(),x);
+                }
             }
 
 

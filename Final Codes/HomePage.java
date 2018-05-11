@@ -1,7 +1,7 @@
 package socialnetwork;
 
-import java.util.Collections;
-import java.util.Vector;
+import java.util.*;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -16,6 +16,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import  socialnetwork.SocialNetwork;
+
+import static socialnetwork.SocialNetwork.UsersInSystem;
+import static socialnetwork.SocialNetwork.currentUser;
+import static socialnetwork.SocialNetwork.searchUsersHashTable;
 
 
 /**
@@ -45,6 +49,7 @@ public class HomePage {
      VBox showVBox ;
      ImageView imageView;
      ScrollPane showScrollPane;
+     Button PeopleYouMayKnowButton;
      static boolean  friendsListButtonPressed ;
      static boolean groupsListButtonPressed;
      
@@ -192,12 +197,40 @@ public class HomePage {
         upperHMenue.getChildren().addAll(userNameLabel,homeButton,profileButton,searchTxtBox,searchButton,sna);
     }
    //************************************************************************************ 
-      VBox peopleYouMayKnow(user currentUser)
+      Set<String> peopleYouMayKnow(user currentUser)
       {
           // implement people you may know
-          showVBox.getChildren().clear();
-         VBox vB = new VBox();
-         return vB;
+
+
+          Map currentUserMap = SocialNetwork.adjencyMatrix.get(currentUser.getUsername());
+          Vector <String> currentUserFriends = currentUser.getFriends();
+
+          Set <String> peopleYouMayKnow = new HashSet<String>();
+          for (String i : currentUserFriends)
+          {
+              user x = searchUsersHashTable(i);
+              for ( String j : x.getFriends())
+              {
+
+                  Integer  check =  (Integer) currentUserMap.get(j);
+
+                  if ( check == 0 && j.equals(currentUser.getUsername())==false)
+                  {
+                      //System.out.println(j + "   "+ currentUser.getUsername());
+                      peopleYouMayKnow.add(j);
+                      //peopleYouMayKnow.add(j);
+                  }
+
+              }
+          }
+
+          for (String i : peopleYouMayKnow){
+              System.out.println(i);
+          }
+          return peopleYouMayKnow ;
+          //showVBox.getChildren().clear();
+         //VBox vB = new VBox();
+         //return vB;
       }
     void setLeftVMenue()
     {
@@ -205,15 +238,43 @@ public class HomePage {
         showVBox.setPadding(new Insets(15, 12, 15, 12));
         showVBox.setSpacing(10);
         
-       showVBox = peopleYouMayKnow(SocialNetwork.currentUser);
+       //showVBox = peopleYouMayKnow(SocialNetwork.currentUser);
         
         imageView = new ImageView(SocialNetwork.currentUser.getProfilePicture());
         imageView.setFitHeight(200);
         imageView.setFitWidth(200);
         imageView.setPreserveRatio(true);
-        
-                
-        
+
+        PeopleYouMayKnowButton = new Button ();
+        PeopleYouMayKnowButton.setText("People you may know");
+        PeopleYouMayKnowButton.setPrefSize(250,10);
+        PeopleYouMayKnowButton.setOnAction(e->{
+
+            Set <String>  peopleyoumayknowlist = peopleYouMayKnow(currentUser);
+            showVBox.getChildren().clear();
+            Button [] peoplebuttonarray = new Button[peopleyoumayknowlist.size()];
+            ImageView [] peopleImageView = new ImageView[peopleyoumayknowlist.size()];
+            VBox [] peopleVbox = new VBox[peopleyoumayknowlist.size()];
+            int i= 0;
+            for(String peopleString :peopleyoumayknowlist )
+            {
+                peopleImageView[i] = new ImageView(SocialNetwork.searchUsersHashTable(peopleString).getProfilePicture());
+                peoplebuttonarray[i] = new Button();
+                peoplebuttonarray[i].setText(peopleString);
+
+                peoplebuttonarray[i].setOnAction(ee->{
+                  SocialNetwork.window.setScene(Profile.Profile(SocialNetwork.searchUsersHashTable(peopleString))); // Replace with marks function
+                });
+                peopleVbox[i] = new VBox();
+                peopleVbox[i].setSpacing(5);
+                peopleVbox[i].getChildren().addAll(peopleImageView[i],peoplebuttonarray[i]);
+                showVBox.getChildren().add(peopleVbox[i]);
+                i++;
+            }
+
+
+        });
+
         friendsListButton = new Button();
         friendsListButton.setText("My Friends");
         friendsListButton.setPrefSize(250,10);
@@ -276,7 +337,7 @@ public class HomePage {
         leftVMenu.setStyle("-fx-background-color: #B3B6B7");
         leftVMenu.setPadding(new Insets(15, 12, 15, 12));
         leftVMenu.setSpacing(10);
-        leftVMenu.getChildren().addAll(imageView,groupsListButton,friendsListButton,showScrollPane);
+        leftVMenu.getChildren().addAll(imageView,groupsListButton,friendsListButton,PeopleYouMayKnowButton,showScrollPane);
        
     }
      private void fillScrollPaneWithPosts()
