@@ -128,7 +128,8 @@ public class Group {
         hb_sn_name.getChildren().add(l_sn_name);
         hb_sn_name.setAlignment(Pos.CENTER_LEFT);
         hb_sn_name.setPadding(new Insets(10,10,10,20));
-        hb.getChildren().addAll(home_button,profile_button);
+        Button b_logout = new Button("Log Out");
+        hb.getChildren().addAll(home_button,profile_button,b_logout);
         bp_top.setRight(hb);
         bp_top.setLeft(hb_sn_name);
         home_button.setOnAction(e->{
@@ -137,6 +138,11 @@ public class Group {
         });
         profile_button.setOnAction(e->{
             SocialNetwork.window.setScene(Profile.Profile(SocialNetwork.currentUser));
+            SocialNetwork.window.setMaximized(true);
+        });
+        LoginPage login = new LoginPage();
+        b_logout.setOnAction(e->{
+            SocialNetwork.window.setScene(login.loginPage(SocialNetwork.window));
             SocialNetwork.window.setMaximized(true);
         });
 

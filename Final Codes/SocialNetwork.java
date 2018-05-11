@@ -1,6 +1,9 @@
 
 package socialnetwork;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 import javafx.application.Application;
@@ -332,7 +335,7 @@ public class SocialNetwork extends Application {
 
         try {
 
-            Object obj = parser.parse(new FileReader("UsersFileKolena.json"));
+            Object obj = parser.parse(new FileReader("C:/Users/Mark/IdeaProjects/SN/src/socialnetwork/UsersFileKolena.json"));
             // JSONObject jsonObject =  (JSONObject) obj;
             JSONArray arrayofusers = (JSONArray) obj;
 
@@ -456,10 +459,10 @@ public class SocialNetwork extends Application {
      
      
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         
         ReadUsersFromFile();
-
+         launch(args);
         for(int i=0; i<hashTableSize;i++)
         {
             LinkedList<user> l = usersHashTable[i];
@@ -467,15 +470,24 @@ public class SocialNetwork extends Application {
             {
                 for (user u : l)
                 {
-                    System.out.println(u.getUsername()+" "+ u.getInfo().getSchool());
-                    System.out.println(i);
-                    //System.out.println(hashFunc(u.getUsername(),hashTableSize));
-
+                    SaveUserInFile(u);
                 }
 
             }
         }
-         launch(args);     
+
+        File file=new File("UsersFileKolena.json");
+        file.createNewFile();
+        FileWriter fileWriter = new FileWriter(file);
+        try {
+            fileWriter.write(USERS.toJSONString());
+            fileWriter.flush();
+            fileWriter.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
    
   
