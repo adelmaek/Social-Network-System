@@ -250,6 +250,7 @@ public class Group {
 
         for(Post temp_p : x.getPosts())
         {
+            temp_p.init_post();
             vb_post.getChildren().add(temp_p.getPostArea());
         }
         ScrollPane sp_post = new ScrollPane();

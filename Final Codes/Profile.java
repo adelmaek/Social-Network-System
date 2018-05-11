@@ -121,7 +121,7 @@ public class Profile {
         info.setTextFill(Color.GRAY);
         info.setStyle("-fx-color: #D3D3D3;");
         info.setAlignment(Pos.TOP_CENTER);
-        Label label_no_friends = new Label("Number of Friends: "+String.valueOf(x.getNumberOfFriends()));///
+        Label label_no_friends = new Label("Number of Friends: "+String.valueOf(x.getFriends_names().size()));///
         label_no_friends.setFont(Font.font("verdana", FontWeight.NORMAL, FontPosture.REGULAR, 16));
         label_no_friends.setAlignment(Pos.CENTER);
         label_no_friends.setWrapText(true);
@@ -412,6 +412,7 @@ public class Profile {
         vb_posts.setMaxWidth(580);
         for(Post p:x.getPosts())
         {
+            p.init_post();
             vb_posts.getChildren().add(p.getPostArea());
         }
         vb_posts.setStyle("-fx-background-radius: 3;");
