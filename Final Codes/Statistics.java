@@ -19,6 +19,12 @@ public class Statistics {
        {
            value=x;name=y;valuename=z;
        }
+       public object (object x)
+       {
+           this.value=x.value;
+           this.name=x.name;
+           this.valuename=x.valuename;
+       }
    }
    private Vector<object> most_friends= new Vector<>(5);
    private Vector<object> most_posts= new Vector<>(5);
@@ -58,6 +64,25 @@ public class Statistics {
    CategoryAxis ca_bd = new CategoryAxis();
    BarChart<String ,Number> bc_bd = new BarChart(ca_bd,na_bd);
 
+    public void mysort (Vector<object> x)
+    {
+        for(int i = 0 ; i<x.size();i++) {
+            object max =new object(x.get(i));
+            int index=i;
+            for (int j = i + 1; j < x.size(); j++)
+            {
+                if(x.get(j).value>max.value)
+                {
+                    max = new object(x.get(j));
+                    index=j;
+                }
+            }
+            object temp = new object(x.get(i));
+            x.set(i,new object(max));
+            x.set(index,temp);
+        }
+
+    }
    public Statistics()
    {
        for(int i =0 ;i<12;i++)
@@ -135,8 +160,7 @@ public class Statistics {
                        init_count++;
                        if(init_count==5)
                        {
-                          // Comparator comparator = Collections.reverseOrder();
-                           //Collections.sort(most_friends,comparator );
+                          mysort(most_friends);
                        }
 
                    }
@@ -145,8 +169,7 @@ public class Statistics {
                         if(u.getFriends_names().size()>most_friends.get(4).value)
                         {
                             most_friends.set(4,new object( u.getFriends_names().size(), u.getUsername(),""));
-                            Comparator comparator = Collections.reverseOrder();
-                            Collections.sort(most_friends,comparator );
+                            mysort(most_friends);
                         }
                    }
                }
@@ -166,8 +189,7 @@ public class Statistics {
                        init_count++;
                        if(init_count==5)
                        {
-                           //Comparator comparator = Collections.reverseOrder();
-                           //Collections.sort(most_posts,comparator );
+                           mysort(most_posts);
                        }
                    }
                    else
@@ -175,8 +197,7 @@ public class Statistics {
                        if(u.getPosts().size()>most_posts.get(4).value)
                        {
                            most_posts.set(4,new object( u.getPosts().size(), u.getUsername(),""));
-                           Comparator comparator = Collections.reverseOrder();
-                           Collections.sort(most_posts,comparator );
+                           mysort(most_posts);
                        }
                    }
                }
@@ -212,8 +233,7 @@ public class Statistics {
        }
        for (int i=5;i<most_cities.size();i++)
            most_cities.remove(i);
-  //     Comparator comparator = Collections.reverseOrder();
-//       Collections.sort(most_cities,comparator );
+       mysort(most_cities);
        cities1.removeAllElements();
 
        init_count=0;
@@ -246,8 +266,7 @@ public class Statistics {
        }
        for (int i=5;i<most_bp.size();i++)
            most_bp.remove(i);
-       //Comparator comparatorq = Collections.reverseOrder();
-       //Collections.sort(most_bp,comparatorq );
+       mysort(most_bp);
        //////////////////////////////////////////////
        pc_gender.getData().addAll(new PieChart.Data(String.valueOf(100*(double)no_males/((double)no_females+(double)no_males)).substring(0,4)
                        +"% Male" , no_males),
