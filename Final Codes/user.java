@@ -28,6 +28,12 @@ class Date_Of_Birth
         this.month = month;
         this.year = year;
     }
+    public Date_Of_Birth(Date_Of_Birth x)
+    {
+        this.day=x.day;
+        this.month=x.month;
+        this.year=x.year;
+    }
 
     public int getDay() {
         return day;
@@ -85,6 +91,20 @@ class Informations
     private MaritalStatus status;
 
 
+    public Informations(Informations x)
+    {
+        this.gender=x.gender;
+        this.status=x.status;
+        this.DateOfBirth=new Date_Of_Birth(x.DateOfBirth);
+        this.school=x.school;
+        this.college=x.college;
+        this.work=x.work;
+        this.birth_place=x.birth_place;
+        this.city=x.city;
+        this.Bio=x.Bio;
+        this.languages=new Vector<>(x.languages);
+        this.NumberOfLanguages=x.NumberOfLanguages;
+    }
     public Informations () {
         gender=Gender.male;
         status=MaritalStatus.non;
@@ -220,6 +240,18 @@ public class user {
         }
     }
 
+    public user(user x)
+    {
+        this.username=x.username;
+        this.Password=x.Password;
+        this.NumberOfFriends=x.NumberOfFriends;
+        this.friends_names=new Vector<>(x.getFriends_names());
+        this.info=new Informations(x.info);
+        this.path=x.path;
+        this.groups_names=new Vector<>(x.groups_names);
+        this.posts=new Vector<>(x.posts);
+        this.ID=x.ID;
+    }
 
     public user(String username, String password) {
         try {

@@ -460,10 +460,9 @@ public class SocialNetwork extends Application {
      
     
     public static void main(String[] args) throws IOException {
-        
         ReadUsersFromFile();
          launch(args);
-        for(int i=0; i<hashTableSize;i++)
+       /* for(int i=0; i<hashTableSize;i++)
         {
             LinkedList<user> l = usersHashTable[i];
             if(l!=null)
@@ -486,7 +485,7 @@ public class SocialNetwork extends Application {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
    

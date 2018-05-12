@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -17,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -80,6 +82,28 @@ public class LoginPage {
                 //
             }
         });
+        Button StatisticsButton = new Button("Users Statistics");
+        StatisticsButton.setOnAction(e->{
+          Stage s_stat = new Stage();
+          GridPane root = new GridPane();
+          Statistics statistics = new Statistics();
+          GridPane.setConstraints(statistics.getBc_bp(),0,0);
+          GridPane.setConstraints(statistics.getBc_cities(),1,0);
+          GridPane.setConstraints(statistics.getPc_gender(),0,1);
+          GridPane.setConstraints(statistics.getPc_status(),1,1);
+          GridPane.setConstraints(statistics.getBc_most_friends(),0,2);
+          GridPane.setConstraints(statistics.getBc_posts(),1,2);
+          GridPane.setConstraints(statistics.getBc_bd(),2,0);
+          GridPane.setConstraints(statistics.getBc_fr(),2,2);
+          GridPane.setConstraints(statistics.getPc_lang(),2,1);
+          root.getChildren().addAll(statistics.getBc_bp(),statistics.getBc_cities(),statistics.getPc_gender(),
+                  statistics.getPc_status(),statistics.getBc_most_friends(),statistics.getBc_posts(),statistics.getBc_bd(),
+                  statistics.getBc_fr(),statistics.getPc_lang());
+          s_stat.setScene(new Scene(root,600,600));
+          root.setGridLinesVisible(true);
+          s_stat.setTitle("Statistics");
+          s_stat.show();
+        });
 
         NameOfApp = new Label ("    Our Social Network");
         NameOfApp.setStyle("-fx-font:40px \"Serif\";\n" + "-fx-text-fill: white;");
@@ -124,7 +148,11 @@ public class LoginPage {
         loginPassword = new PasswordField();
         loginPassword.setPromptText("Enter your password");
 
-        login.getChildren().addAll(loginLabel,loginUsername,loginPassword,loginButton,VisualizeButton);
+        VBox sec_vb = new VBox();
+        sec_vb.getChildren().addAll(VisualizeButton,StatisticsButton);
+        sec_vb.setAlignment(Pos.CENTER);
+        sec_vb.setSpacing(10);
+        login.getChildren().addAll(loginLabel,loginUsername,loginPassword,loginButton,sec_vb);
         login.setAlignment(Pos.CENTER);
 
         top.getChildren().addAll(NameOfApp,login);
