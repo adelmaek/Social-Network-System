@@ -114,7 +114,7 @@ public class SocialNetwork extends Application {
        
        for (socialnetwork.Group myGroup:groupHashTable[hashNumber])
        {
-           if(myGroup.getName()== group_name)
+           if(myGroup.getName().equals(group_name) )
            {
                found = myGroup;
            }
@@ -145,7 +145,7 @@ public class SocialNetwork extends Application {
 
     private static Scanner x;
     public static JSONArray USERS = new JSONArray();
-
+    public static JSONArray GROUPS =new JSONArray();
     public static JSONArray USERPOST = new JSONArray();
 
     public static void SaveUserInFile(user u) {
@@ -173,7 +173,7 @@ public class SocialNetwork extends Application {
         UserObject.put("Bio", u.getInfo().getBio());
 
         JSONArray friendsarrobj = new JSONArray();
-        for (int j = 0; j < u.getNumberOfFriends(); j++) {
+        for (int j = 0; j < u.getFriends().size(); j++) {
             friendsarrobj.add(u.getFriends().get(j));
         }
         UserObject.put("Friends", friendsarrobj);
@@ -329,13 +329,94 @@ public class SocialNetwork extends Application {
         return parsed;
     }
 
+    public static void ReadGroupsFromFile()
+    {
+        JSONParser parser = new JSONParser();
+
+        try {
+
+            Object obj = parser.parse(new FileReader("Groups.json"));
+
+            JSONArray arrayofgps = (JSONArray) obj;
+
+            for (int i = 0; i < arrayofgps.size(); i++) {
+                Group parsed = new Group();
+                JSONObject GroupsUser1 = (JSONObject) arrayofgps.get(i);
+                JSONObject GroupsUser = (JSONObject) GroupsUser1.get("Group");
+                parsed.setName(GroupsUser.get("Name").toString());
+                //parsed.setGroup_pic();
+                parsed.setGroup_info(GroupsUser.get("Group info").toString());
+                parsed.setAdmin(GroupsUser.get("Admin").toString());
+
+                JSONArray UserArrgowa = (JSONArray) GroupsUser.get("Posts");
+                Vector<Post> Posts = new Vector<Post>(10);
+                for (int j = 0; j < UserArrgowa.size(); j++) {
+                    JSONObject Postobjgowa = (JSONObject) UserArrgowa.get(j);
+                    JSONObject Postobjinfo = (JSONObject) Postobjgowa.get("Post");
+                    Post pp = new Post();
+                    pp.setPostOwner(Postobjinfo.get("Post Owner").toString());
+                    pp.setPostContent(Postobjinfo.get("Post Content").toString());
+                    Vector<String> Likes = new Vector<String>(10);
+                    Vector<String> Dislikes = new Vector<String>(10);
+                    Vector<Comment> MyComments = new Vector<Comment>(10);
+                    JSONArray CommentsObj = (JSONArray) Postobjinfo.get("Comments");
+                    JSONArray LikesObj = (JSONArray) Postobjinfo.get("Likes");
+                    JSONArray DislikesObj = (JSONArray) Postobjinfo.get("Dislikes");
+                    for (int k = 0; k < CommentsObj.size(); k++) {
+                        Comment c = new Comment();
+                        JSONObject Comm = (JSONObject) CommentsObj.get(k);
+                        c.setCommentOwner(Comm.get("Comment Owner").toString());
+                        c.setComment(Comm.get("Comment Content").toString());
+                        MyComments.add(c);
+                    }
+                    for (int k = 0; k < DislikesObj.size(); k++) {
+                        Dislikes.add(DislikesObj.get(k).toString());
+                    }
+                    for (int k = 0; k < LikesObj.size(); k++) {
+                        Likes.add(LikesObj.get(k).toString());
+                    }
+                    pp.setPostComments(MyComments);
+                    pp.setDislike(Dislikes);
+                    pp.setLikes(Likes);
+                    //System.out.println(pp.getPostContent());
+                    Posts.add(pp);
+                }
+
+                parsed.setPosts(Posts);
+
+                //friends
+                JSONArray MembersList = (JSONArray) GroupsUser.get("Member List");
+                Vector<String> memlist = new Vector<String>(10);
+                for (int k = 0; k < MembersList.size(); k++) {
+                    memlist.add(MembersList.get(k).toString());
+                }
+                parsed.setMembers_names(memlist);
+
+
+                //
+
+                // System.out.println(parsed);
+                addToGroupsHashTable(parsed);
+
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
     public static void ReadUsersFromFile() {
 
         JSONParser parser = new JSONParser();
 
         try {
 
-            Object obj = parser.parse(new FileReader("C:/Users/Mark/IdeaProjects/SN/src/socialnetwork/UsersFileKolena.json"));
+            Object obj = parser.parse(new FileReader("UsersFileKolena.json"));
             // JSONObject jsonObject =  (JSONObject) obj;
             JSONArray arrayofusers = (JSONArray) obj;
 
@@ -389,9 +470,11 @@ public class SocialNetwork extends Application {
 
                 //friends
                 JSONArray FriendsObj = (JSONArray) Userobjgowa.get("Friends");
+
                 Vector<String> friendslist = new Vector<String>(10);
                 for (int k = 0; k < FriendsObj.size(); k++) {
                     friendslist.add(FriendsObj.get(k).toString());
+                    System.out.println(FriendsObj.get(k).toString());
                 }
                 parsed.setFriends(friendslist);
 
@@ -455,25 +538,98 @@ public class SocialNetwork extends Application {
         }
 
     }
-    
-     
-     
-    
+
+    public static void SaveGroupInFile(Group g)
+    {
+        JSONObject GroupObject = new JSONObject();
+        JSONObject GroupObjgowa=new JSONObject();
+        GroupObjgowa.put("Name",g.getName());
+        GroupObjgowa.put("Admin",g.getAdmin());
+        GroupObjgowa.put("Photo Path",g.getGroup_pic());
+        GroupObjgowa.put("Group info",g.getGroup_info());
+
+        Vector<String> members_names=g.getMembers_names();
+        JSONArray memlis=new JSONArray();
+        for(int j=0;j<g.getMembers_names().size();j++)
+        {
+            memlis.add(g.getMembers_names().get(j));
+        }
+        GroupObjgowa.put("Member List",memlis);
+        Vector<Post> posts=g.getPosts();
+
+        JSONArray postsarrobj = new JSONArray();
+        JSONArray POSTS = new JSONArray();
+        for (int j = 0; j < g.getPosts().size(); j++) {
+
+            JSONObject Posts = new JSONObject();
+            JSONObject PostObject = new JSONObject();
+            Post p = g.getPosts().get(j);
+
+            PostObject.put("Post Owner", p.getPostOwner());
+            PostObject.put("Post Content", p.getPostContent());
+            JSONArray JsonComments = new JSONArray();
+            for (int i = 0; i < p.getPostComments().size(); i++) {
+                JSONObject Commentobj = new JSONObject();
+                Commentobj.put("Comment Content", p.getPostComment(i).getComment());
+                Commentobj.put("Comment Owner", p.getPostComment(i).getCommentOwner());
+
+                JsonComments.add(Commentobj);
+            }
+            PostObject.put("Comments", JsonComments);
+            JSONArray JsonLikes = new JSONArray();
+            JSONArray JsonDislikes = new JSONArray();
+            for (int i = 0; i < p.getNumbOfLikes(); i++) {
+                JsonLikes.add(p.getLike(i));
+            }
+            for (int i = 0; i < p.getNumbOfDislikes(); i++) {
+                JsonDislikes.add(p.getDislike(i));
+            }
+            PostObject.put("Likes", JsonLikes);
+            PostObject.put("Dislikes", JsonDislikes);
+
+            Posts.put("Post", PostObject);
+            POSTS.add(Posts);
+        }
+        GroupObjgowa.put("Posts", POSTS);
+
+        GroupObject.put("Group", GroupObjgowa);
+
+        GROUPS.add(GroupObject);
+
+
+
+
+    }
+
+
+
+
     public static void main(String[] args) throws IOException {
         ReadUsersFromFile();
+        ReadGroupsFromFile();
          launch(args);
-       /* for(int i=0; i<hashTableSize;i++)
+
+       for(int i=0; i<hashTableSize;i++)
         {
             LinkedList<user> l = usersHashTable[i];
             if(l!=null)
             {
                 for (user u : l)
                 {
+                    if(u.getUsername().equals(currentUser.getUsername()))
+                    {
+                       //socialnetwork.MessageBox.display("error","error");
+                    }
+                    else
+                    {
                     SaveUserInFile(u);
+                    }
                 }
+
 
             }
         }
+        SaveUserInFile(currentUser);
 
         File file=new File("UsersFileKolena.json");
         file.createNewFile();
@@ -485,7 +641,36 @@ public class SocialNetwork extends Application {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
+
+        for(int i=0; i<hashTableSize;i++)
+        {
+            LinkedList<Group> l = groupHashTable[i];
+            if(l!=null)
+            {
+                for (Group u : l)
+                {
+                    SaveGroupInFile(u);
+                    // System.out.println(u.getUsername()+" "+ u.getInfo().getSchool());
+                    //System.out.println(i);
+                    // SaveUserInFile(u);
+                    //System.out.println(hashFunc(u.getUsername(),hashTableSize));
+
+                }
+
+            }
+        }
+        File file2=new File("Groups.json");
+        file2.createNewFile();
+        FileWriter fileWriter2 = new FileWriter(file2);
+        try {
+            fileWriter2.write(GROUPS.toJSONString());
+            fileWriter2.flush();
+            fileWriter2.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
    

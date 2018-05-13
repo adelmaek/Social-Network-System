@@ -232,9 +232,9 @@ import javafx.stage.Stage;
         addComment.setOnAction(e->{
             if(!ta_add_comments.getText().isEmpty())
             {
-                Comment temp = new Comment(ta_add_comments.getText(),SocialNetwork.currentUser.getUsername());
-                postComments.add(temp);
-                vb_comments.getChildren().add(temp.getComment_area());
+                //Comment temp = new Comment(ta_add_comments.getText(),SocialNetwork.currentUser.getUsername());
+                postComments.add(new Comment(ta_add_comments.getText(),SocialNetwork.currentUser.getUsername()));
+                vb_comments.getChildren().add(new Comment(ta_add_comments.getText(),SocialNetwork.currentUser.getUsername()).getComment_area());
                 ta_add_comments.setText("");
                 ta_add_comments.setPromptText("Add a Comment...");
             }

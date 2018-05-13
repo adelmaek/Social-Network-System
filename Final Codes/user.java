@@ -344,7 +344,7 @@ public class user {
 
         try {
             path=pathh;
-            Image im = new Image(new FileInputStream("pathh"));
+            Image im = new Image(new FileInputStream(pathh));
             setProfilePicture(im);
         }
         catch (FileNotFoundException ex) {
@@ -356,6 +356,18 @@ public class user {
 
     public void addFriend (String friend )
     {
+//        Map<String,Integer> l = new HashMap<String,Integer>();
+//        l = SocialNetwork.adjencyMatrix.get(this.getUsername());
+//        l.put(friend,1);
+//        SocialNetwork.adjencyMatrix.put(this.getUsername(),l);
+        SocialNetwork.adjencyMatrix.get(this.getUsername()).put(friend,1);
+//        for (user i : SocialNetwork.UsersInSystem) {
+//            if ( i.equals(friend)==true)
+//                l.put(i.getUsername(), 1);
+//            else
+//            l.put(i.getUsername(), 0);
+//        }
+//        SocialNetwork.adjencyMatrix.put(this.getUsername(),l);
 
         friends_names.add(friend);
         this.NumberOfFriends++ ;

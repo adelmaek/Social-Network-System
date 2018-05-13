@@ -117,13 +117,14 @@ public class Group {
         hb.setMinHeight(60);
         hb.setPadding(new Insets(10,20,10,10));
         bp_top.getStyleClass().add("top_bar");
+        bp_top.setPrefHeight(100);
         Button home_button=new Button("Home");
         Button profile_button=new Button("Profile");
         home_button.setPrefSize(60,30);
         profile_button.setPrefSize(60,30);
         HBox hb_sn_name = new HBox();
         Label l_sn_name = new Label("Our Social Network");
-        l_sn_name.setFont(Font.font("Serif", FontWeight.NORMAL, FontPosture.ITALIC, 30));
+        l_sn_name.setFont(Font.font("Serif", FontWeight.NORMAL, /*FontPosture.ITALIC,*/ 40));
         l_sn_name.setStyle("-fx-text-fill: #FFFFFF;");
         hb_sn_name.getChildren().add(l_sn_name);
         hb_sn_name.setAlignment(Pos.CENTER_LEFT);

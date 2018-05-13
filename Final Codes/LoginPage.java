@@ -25,8 +25,10 @@ import javafx.stage.Stage;
 import socialnetwork.SocialNetwork;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import static socialnetwork.SocialNetwork.window;
+import static socialnetwork.SocialNetwork.*;
 
 /**
  *
@@ -157,7 +159,7 @@ public class LoginPage {
 
         top.getChildren().addAll(NameOfApp,login);
         top.setAlignment(Pos.CENTER_LEFT);
-        top.setStyle("-fx-background-color: khaki");
+        top.setStyle("-fx-background-color: #2f4f4f");
         top.setPrefHeight(100);
 
 
@@ -169,7 +171,7 @@ public class LoginPage {
     {
 
         registerLabel = new Label("Register First");
-        registerLabel.setStyle("-fx-font:20px \"Serif\";\n" + "-fx-text-fill: #6495ED;");
+        registerLabel.setStyle("-fx-font:20px \"Serif\";\n" + "-fx-text-fill: white;");
         registerLabel.setAlignment(Pos.TOP_LEFT);
         registerLabel.setPrefWidth(500);
 
@@ -218,48 +220,59 @@ public class LoginPage {
         registerButton.setOnAction(e->{
                //new user data
             // we have to check that he filled all
-            user NewEntry = new user () ;
-            int day = RegisterDateOfBirth.getValue().getDayOfMonth();
-            int month = RegisterDateOfBirth.getValue().getMonthValue();
-            int year = RegisterDateOfBirth.getValue().getYear();
-            Date_Of_Birth dateofbirthnew = new Date_Of_Birth(day,month,year);
-            Informations newEntryInfo = new Informations();
-            newEntryInfo.setDateOfBirth(dateofbirthnew);
-            newEntryInfo.setBirth_place(RegisterPlaceOfBirth.getText());
-            newEntryInfo.setCity(RegisterCity.getText());
-            
-            NewEntry.setPassword(registerPassword.getText());
-            NewEntry.setUsername(registerUsername.getText());
-            if (GenderComboBox.getSelectionModel().getSelectedItem()=="Female")
+            if(searchUsersHashTable(registerUsername.getText())!=null)
             {
-                newEntryInfo.setGender(Informations.Gender.female);
+                MessageBox.display("Error","Try another user name");
+            }
+            else {
+                user NewEntry = new user();
+                int day = RegisterDateOfBirth.getValue().getDayOfMonth();
+                int month = RegisterDateOfBirth.getValue().getMonthValue();
+                int year = RegisterDateOfBirth.getValue().getYear();
+                Date_Of_Birth dateofbirthnew = new Date_Of_Birth(day, month, year);
+                Informations newEntryInfo = new Informations();
+                newEntryInfo.setDateOfBirth(dateofbirthnew);
+                newEntryInfo.setBirth_place(RegisterPlaceOfBirth.getText());
+                newEntryInfo.setCity(RegisterCity.getText());
+
+                NewEntry.setPassword(registerPassword.getText());
+                NewEntry.setUsername(registerUsername.getText());
+                if (GenderComboBox.getSelectionModel().getSelectedItem() == "Female") {
+                    newEntryInfo.setGender(Informations.Gender.female);
+
+                } else if (GenderComboBox.getSelectionModel().getSelectedItem() == "Male") {
+                    newEntryInfo.setGender(Informations.Gender.male);
+                }
+                //"Single","In a Relationship","Engaged","Married"
+
+                if (MarritalStatusComboBox.getSelectionModel().getSelectedItem() == "Single") {
+                    newEntryInfo.setStatus(Informations.MaritalStatus.single);
+
+                } else if (MarritalStatusComboBox.getSelectionModel().getSelectedItem() == "In a Relationship") {
+                    newEntryInfo.setStatus(Informations.MaritalStatus.inarelationship);
+                } else if (MarritalStatusComboBox.getSelectionModel().getSelectedItem() == "Engaged") {
+                    newEntryInfo.setStatus(Informations.MaritalStatus.engaged);
+                } else if (MarritalStatusComboBox.getSelectionModel().getSelectedItem() == "Married") {
+                    newEntryInfo.setStatus(Informations.MaritalStatus.married);
+                }
+
+                NewEntry.setInfo(newEntryInfo);
+                NewEntry.setpp("maleavatar.jpg");
+                SocialNetwork.SaveUserInFile(NewEntry);
+                addToHashTable(NewEntry);
+                SocialNetwork.UsersInSystem.add(NewEntry);
+
+
+                    Map<String,Integer> in = new HashMap<String,Integer>();
+                    for (user j: UsersInSystem)
+                    {
+
+                        in.put(j.getUsername(),0);
+
+                    }
+                SocialNetwork.adjencyMatrix.put(NewEntry.getUsername(), in );
 
             }
-            else if (GenderComboBox.getSelectionModel().getSelectedItem()=="Male")
-            {
-                newEntryInfo.setGender(Informations.Gender.male);
-            }
-            //"Single","In a Relationship","Engaged","Married"
-
-            if (MarritalStatusComboBox.getSelectionModel().getSelectedItem()=="Single") {
-                newEntryInfo.setStatus(Informations.MaritalStatus.single);
-
-            }
-            else if (MarritalStatusComboBox.getSelectionModel().getSelectedItem()=="In a Relationship")
-            {
-                newEntryInfo.setStatus(Informations.MaritalStatus.inarelationship);
-            }
-            else if (MarritalStatusComboBox.getSelectionModel().getSelectedItem()=="Engaged")
-            {
-                newEntryInfo.setStatus(Informations.MaritalStatus.engaged);
-            }
-            else if (MarritalStatusComboBox.getSelectionModel().getSelectedItem()=="Married")
-            {
-                newEntryInfo.setStatus(Informations.MaritalStatus.married);
-            }
-            
-            NewEntry.setInfo(newEntryInfo);
-            SocialNetwork.SaveUserInFile(NewEntry);
            // System.out.println(USERS.toJSONString());         
         });
         registerButton.setAlignment(Pos.CENTER);
@@ -269,6 +282,8 @@ public class LoginPage {
         register.setAlignment(Pos.CENTER);
         register.setMaxWidth(400);
 
+
+        page.setStyle("-fx-background-color: #B3B6B7");
 
         page.setCenter(register);
 

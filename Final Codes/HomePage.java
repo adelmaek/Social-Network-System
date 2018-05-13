@@ -124,21 +124,21 @@ public class HomePage {
         upperHMenue.setPadding(new Insets(15, 12, 15, 12));
        
         sna = new Label();
-        sna.setText("Social Network");
+        sna.setText("Our Social Network");
         sna.setStyle("-fx-font:40px \"Serif\";\n" + "-fx-text-fill: white;");
         sna.setLayoutX(10);
-        sna.setLayoutY(10);
+        sna.setLayoutY(30);
         
         userNameLabel = new Label();
         userNameLabel.setText(SocialNetwork.currentUser.getUsername());
         userNameLabel.setLayoutX(850);
-        userNameLabel.setLayoutY(10);
+        userNameLabel.setLayoutY(20);
         //userNameLabel.setPrefWidth(50);
         userNameLabel.setStyle("-fx-font:40px \"Serif\";\n"+"-fx-text-fill: white;"+"-fx-padding:2;"+"font-weight: bold;");
         homeButton = new Button();
         homeButton.setText("Home");
         homeButton.setLayoutX(1000);
-        homeButton.setLayoutY(20);
+        homeButton.setLayoutY(40);
         homeButton.setPrefSize(100,10);
         homeButton.setOnAction(e->{
             //implement "go to home " here user tempUser = SocialNetwork.currentUser;
@@ -151,7 +151,7 @@ public class HomePage {
         profileButton.setPrefSize(100,10);
         profileButton.getStyleClass().add("border-blue");
         profileButton.setLayoutX(1110);
-        profileButton.setLayoutY(20);
+        profileButton.setLayoutY(40);
         profileButton.setOnAction(e->{
             //implement "go to profile " here
             SocialNetwork.window.setScene(Profile.Profile(SocialNetwork.currentUser));             
@@ -162,14 +162,14 @@ public class HomePage {
         searchTxtBox.setPromptText("search here...");
         searchTxtBox.setAlignment(Pos.CENTER);
        searchTxtBox.setLayoutX(500);
-       searchTxtBox.setLayoutY(20);
-       String[] autocomp = {"Adel","Sama","Salma"};
+       searchTxtBox.setLayoutY(40);
+       String[] autocomp = {"user2","user3","user7","user59"};
        
        
         searchButton = new Button();
         searchButton.setText("Search");
         searchButton.setLayoutX(500 +5 +150);
-        searchButton.setLayoutY(20);
+        searchButton.setLayoutY(40);
         searchButton.setOnAction(e->{
             //implement search here
             if (SocialNetwork.searchUsersHashTable(searchTxtBox.getText())!= null)
@@ -189,10 +189,10 @@ public class HomePage {
             
         });
         
-        upperHMenue.setPrefHeight(80);
+        upperHMenue.setPrefHeight(100);
         upperHMenue.setStyle("-fx-padding:5;" + "-fx-border-style:solid;"
         + "-fx-border-width: 5;" + "-fx-border-insets: 0;"
-        + "-fx-border-radius: 1;" + "-fx-border-color: #979A9A;"+"-fx-background-color: #979A9A;");
+        + "-fx-border-radius: 1;" + "-fx-border-color: #2f4f4f;"+"-fx-background-color: #2f4f4f;");
         
         upperHMenue.getChildren().addAll(userNameLabel,homeButton,profileButton,searchTxtBox,searchButton,sna);
     }
@@ -236,6 +236,10 @@ public class HomePage {
     {
          showVBox = new VBox();
         showVBox.setPadding(new Insets(15, 12, 15, 12));
+        showVBox.setAlignment(Pos.CENTER);
+        //showVBox.setStyle("-fx-background-color: #BFF6B7");
+        showVBox.setLayoutX(100);
+        showVBox.setLayoutY(100);
         showVBox.setSpacing(10);
         
        //showVBox = peopleYouMayKnow(SocialNetwork.currentUser);
@@ -260,8 +264,10 @@ public class HomePage {
             {
                 peopleImageView[i] = new ImageView(SocialNetwork.searchUsersHashTable(peopleString).getProfilePicture());
                 peoplebuttonarray[i] = new Button();
+                peopleImageView[i].setFitHeight(100);
+                peopleImageView[i].setFitWidth(100);
                 peoplebuttonarray[i].setText(peopleString);
-
+                peoplebuttonarray[i].setPrefSize(100,20);
                 peoplebuttonarray[i].setOnAction(ee->{
                   SocialNetwork.window.setScene(Profile.Profile(SocialNetwork.searchUsersHashTable(peopleString))); // Replace with marks function
                 });
@@ -288,7 +294,10 @@ public class HomePage {
                 for(String aFriendString:SocialNetwork.currentUser.getFriends() )
                     {
                          myFriendImageView[i] = new ImageView(SocialNetwork.searchUsersHashTable(aFriendString).getProfilePicture());
+                        myFriendImageView[i].setFitHeight(100);
+                        myFriendImageView[i].setFitWidth(100);
                          myFriendButton[i] = new Button();
+                        myFriendButton[i].setPrefSize(100,20);
                          myFriendButton[i].setText(SocialNetwork.searchUsersHashTable(aFriendString).getUsername());
                
                         myFriendButton[i].setOnAction(ee->{
@@ -314,7 +323,10 @@ public class HomePage {
                 for(String aGroupString :SocialNetwork.currentUser.getGroups_names() )
                     {
                          myGroupsImageView[i] = new ImageView(SocialNetwork.searchGroupsHashTable(aGroupString).getGroup_pic());
+                        myGroupsImageView[i].setFitWidth(100);
+                        myGroupsImageView[i].setFitHeight(100);
                          myGroupsButton[i] = new Button();
+                         myGroupsButton[i].setPrefSize(100,20);
                          myGroupsButton[i].setText(SocialNetwork.searchGroupsHashTable(aGroupString).getName());
                
                         myGroupsButton[i].setOnAction(ee->{
@@ -332,7 +344,7 @@ public class HomePage {
         
         showScrollPane = new ScrollPane();
         showScrollPane.setContent(showVBox);
-        
+        showScrollPane.setStyle("-fx-background-color: #B3B6B7");
         leftVMenu = new VBox();
         leftVMenu.setStyle("-fx-background-color: #B3B6B7");
         leftVMenu.setPadding(new Insets(15, 12, 15, 12));
