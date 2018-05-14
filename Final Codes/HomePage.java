@@ -362,8 +362,10 @@ public class HomePage {
        
         while(Integer.compare(index, SocialNetwork.currentUser.getPosts().size())==-1 )
         {
-            tempPost = new Post(SocialNetwork.currentUser.getPosts().get(SocialNetwork.currentUser.getPosts().size()-1-index).getPostContent(),SocialNetwork.currentUser.getPosts().get(SocialNetwork.currentUser.getPosts().size()-1).getPostOwner());
-            centerVBoxPane.getChildren().add(tempPost.getPostArea());
+            //tempPost = new Post(SocialNetwork.currentUser.getPosts().get(SocialNetwork.currentUser.getPosts().size()-1-index).getPostContent(),SocialNetwork.currentUser.getPosts().get(SocialNetwork.currentUser.getPosts().size()-1).getPostOwner());
+            Post tempnewpost = SocialNetwork.currentUser.getPosts().get(SocialNetwork.currentUser.getPosts().size()-1-index);
+            tempnewpost.init_post();
+            centerVBoxPane.getChildren().add(tempnewpost.getPostArea());
             index++;
             filledFlag =true;
             if(index==2)break;
@@ -378,8 +380,10 @@ public class HomePage {
               
                while(Integer.compare(index, SocialNetwork.searchUsersHashTable(x).posts.size())==-1)
                {
-               tempPost = new Post(SocialNetwork.searchUsersHashTable(x).posts.get(SocialNetwork.searchUsersHashTable(x).posts.size()-1-index).getPostContent(),SocialNetwork.searchUsersHashTable(x).posts.get(SocialNetwork.searchUsersHashTable(x).posts.size()-1-index).getPostOwner());
-               centerVBoxPane.getChildren().add(tempPost.getPostArea());
+              // tempPost = new Post(SocialNetwork.searchUsersHashTable(x).posts.get(SocialNetwork.searchUsersHashTable(x).posts.size()-1-index).getPostContent(),SocialNetwork.searchUsersHashTable(x).posts.get(SocialNetwork.searchUsersHashTable(x).posts.size()-1-index).getPostOwner());
+                   Post tempnewpost = SocialNetwork.searchUsersHashTable(x).posts.get(SocialNetwork.searchUsersHashTable(x).posts.size()-1-index);
+                   tempnewpost.init_post();
+                   centerVBoxPane.getChildren().add(tempnewpost.getPostArea());
                filledFlag = true;
                index ++;
                
