@@ -224,7 +224,23 @@ public class LoginPage {
             {
                 MessageBox.display("Error","Try another user name");
             }
-            else {
+            else if(RegisterDateOfBirth.getValue()==null ||
+                    registerPassword.getText().equals("")||
+                    registerPassword.getText().equals(null)
+                    ||RegisterPlaceOfBirth.getText().equals(null)||
+                    RegisterPlaceOfBirth.getText().equals("")||
+                    GenderComboBox.getSelectionModel().getSelectedItem()==null
+                    ||MarritalStatusComboBox.getSelectionModel().getSelectedItem()==null
+                    ||RegisterCity.getText().equals(null)||
+                    RegisterCity.getText().equals("")
+                    ||registerUsername.getText().equals("")
+                    ||registerUsername.getText().equals(null)
+
+                    )
+                {
+                  MessageBox.display("Registration incomplete","Please fill all the fields");
+                }
+                else{
                 user NewEntry = new user();
                 int day = RegisterDateOfBirth.getValue().getDayOfMonth();
                 int month = RegisterDateOfBirth.getValue().getMonthValue();
