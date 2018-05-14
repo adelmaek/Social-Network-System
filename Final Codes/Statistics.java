@@ -131,17 +131,17 @@ public class Statistics {
                        else if(s.equalsIgnoreCase("italian"))
                            most_lang.set(4,most_lang.get(4)+1);
                    }
-                   if(u.getFriends_names().size()<=10)
+                   if(u.getFriends_names().size()<=4)
                        friends_range.set(0,friends_range.get(0)+1);
-                   else if(u.getFriends_names().size()>10 && u.getFriends_names().size()<=20 )
+                   else if(u.getFriends_names().size()>4 && u.getFriends_names().size()<=8 )
                        friends_range.set(1,friends_range.get(1)+1);
-                   else if(u.getFriends_names().size()>20 && u.getFriends_names().size()<=30 )
+                   else if(u.getFriends_names().size()>8 && u.getFriends_names().size()<=12 )
                        friends_range.set(2,friends_range.get(2)+1);
-                   else if(u.getFriends_names().size()>30 && u.getFriends_names().size()<=40 )
+                   else if(u.getFriends_names().size()>12 && u.getFriends_names().size()<=16 )
                        friends_range.set(3,friends_range.get(3)+1);
-                   else if(u.getFriends_names().size()>40 && u.getFriends_names().size()<=50 )
+                   else if(u.getFriends_names().size()>16 && u.getFriends_names().size()<=20 )
                        friends_range.set(4,friends_range.get(4)+1);
-                   else if(u.getFriends_names().size()>50 && u.getFriends_names().size()<=60 )
+                   else if(u.getFriends_names().size()>20  )
                        friends_range.set(5,friends_range.get(5)+1);
                }
            }
@@ -330,12 +330,12 @@ public class Statistics {
 
        XYChart.Series<String, Number> series6 = new XYChart.Series<>();
        bc_fr.setTitle("Users' Number of Friends\n(Number of All Users: "+String.valueOf(no_users)+")");
-       series6.getData().addAll(new XYChart.Data<>("0-10 Friends",friends_range.get(0)),
-               new XYChart.Data<>("11-20 Friends",friends_range.get(1)),
-               new XYChart.Data<>("21-30 Friends",friends_range.get(2)),
-               new XYChart.Data<>("31-40 Friends",friends_range.get(3)),
-               new XYChart.Data<>("41-50 Friends",friends_range.get(4)),
-               new XYChart.Data<>("51-60 Friends",friends_range.get(5)));
+       series6.getData().addAll(new XYChart.Data<>("0-4 Friends",friends_range.get(0)),
+               new XYChart.Data<>("5-8 Friends",friends_range.get(1)),
+               new XYChart.Data<>("9-12 Friends",friends_range.get(2)),
+               new XYChart.Data<>("13-16 Friends",friends_range.get(3)),
+               new XYChart.Data<>("17-20 Friends",friends_range.get(4)),
+               new XYChart.Data<>(">20 Friends",friends_range.get(5)));
        bc_fr.getData().add(series6);
        bc_fr.setBarGap(0);
        bc_fr.setLegendVisible(false);

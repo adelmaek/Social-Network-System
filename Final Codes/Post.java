@@ -31,22 +31,24 @@ import javafx.stage.Stage;
  */
 
  class Post {
+
+
     private String postOwner;
     private String postContent;
     //private Map <String,String> comment;
-    private Vector<Comment> postComments;
-    private Vector<String> likes;
-    private int numbOfLikes;
-    private Vector<String> dislike;
-    int numbOfDislikes;
+    private Vector<Comment> postComments=new Vector<Comment>();
+    private Vector<String> likes=new Vector<>();;
+    private int numbOfLikes=0;
+    private Vector<String> dislike=new Vector<>();;
+    int numbOfDislikes=0;
     //May Add reactions.
     private VBox postArea;
-    Button likeButton;
-    Button disLikeButton;
-    TextArea addCommentText;
-    Button addComment;
+    Button likeButton= new Button("Like");
+    Button disLikeButton= new Button("DisLike");
+    TextArea addCommentText= new TextArea();
+    Button addComment= new Button("Comment");
    // Button viewComments;
-    Button viewReactions;
+    Button viewReactions= new Button("View Reactions");
     //*********************************************************By Salma***************************************************8888
      public void setPostOwner(String postOwner) {
         this.postOwner = postOwner;
@@ -118,35 +120,15 @@ import javafx.stage.Stage;
     public Post()
     {
         postArea= new VBox();
-        likeButton= new Button("Like");
-        disLikeButton= new Button("DisLike");
-        addCommentText= new TextArea();
-        addComment= new Button("Comment");
-       // viewComments = new Button("View Comments");
-        viewReactions= new Button("View Reactions");
-        postComments= new Vector<Comment>();
-        likes=new Vector<>();
-        dislike=new Vector<>();
     }
 
-    
+
 
     public Post(String postContent, String user_name )
     {
         postArea= new VBox();
-        likeButton= new Button("Like");
-        disLikeButton= new Button("DisLike");
-        addCommentText= new TextArea();
-        addComment= new Button("Comment");
-       // viewComments = new Button("View Comments");
-        viewReactions= new Button("View Reactions");
-        postComments= new Vector<Comment>();
-        likes=new Vector<>();
-        dislike=new Vector<>();
         this.postOwner = user_name;
         this.postContent = postContent;
-        numbOfLikes=0;
-        numbOfDislikes=0;
 
         Label user_label= new Label(user_name);    //post user name
         user_label.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 16));
@@ -284,18 +266,6 @@ import javafx.stage.Stage;
     public void init_post()
     {
         postArea= new VBox();
-        likeButton= new Button("Like");
-        disLikeButton= new Button("DisLike");
-        addCommentText= new TextArea();
-        addComment= new Button("Comment");
-        // viewComments = new Button("View Comments");
-        viewReactions= new Button("View Reactions");
-        postComments= new Vector<Comment>();
-        likes=new Vector<>();
-        dislike=new Vector<>();
-        numbOfLikes=0;
-        numbOfDislikes=0;
-
         Label user_label= new Label(postOwner);    //post user name
         user_label.setFont(Font.font("verdana", FontWeight.BOLD, FontPosture.REGULAR, 16));
         user_label.setAlignment(Pos.CENTER_LEFT);
@@ -421,7 +391,6 @@ import javafx.stage.Stage;
 
 
         });
-
 
         postArea.getChildren().addAll(user_label,post_label,hb_reactions,vb_comments,hb_add_comments);
         postArea.setAlignment(Pos.CENTER_LEFT);

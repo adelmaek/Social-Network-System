@@ -422,7 +422,7 @@ public class SocialNetwork extends Application {
 
         try {
 
-            Object obj = parser.parse(new FileReader("UsersFileKolena.json"));
+            Object obj = parser.parse(new FileReader("C:/Users/Mark/IdeaProjects/SN/src/socialnetwork/UsersFileKolena.json"));
             // JSONObject jsonObject =  (JSONObject) obj;
             JSONArray arrayofusers = (JSONArray) obj;
 
@@ -513,7 +513,7 @@ public class SocialNetwork extends Application {
 
 
                 parsed.setInfo(info);
-               // System.out.println(parsed);
+               //System.out.println(parsed);
                 UsersInSystem.add(parsed);
                 addToHashTable(parsed);
 
