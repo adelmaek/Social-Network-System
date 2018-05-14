@@ -170,6 +170,12 @@ public class SocialNetwork extends Application {
         UserObject.put("Gender", u.getInfo().getGender().toString());
         UserObject.put("Status", u.getInfo().getStatus().toString());
         UserObject.put("Number Of Languages", u.getInfo().getNumberOfLanguages());
+        JSONArray lang=new JSONArray();
+        for(int j=0;j<u.getInfo().getLanguages().size();j++)
+        {
+            lang.add(u.getInfo().getLanguages().get(j));
+        }
+        UserObject.put("Languages",lang);
         UserObject.put("Bio", u.getInfo().getBio());
 
         JSONArray friendsarrobj = new JSONArray();
@@ -499,6 +505,11 @@ public class SocialNetwork extends Application {
                 info.setSchool(Userobjgowa.get("School").toString());
                 info.setWork(Userobjgowa.get("Work").toString());
                 info.setNumberOfLanguages(Integer.parseInt(Userobjgowa.get("Number Of Languages").toString()));
+                JSONArray langarr=(JSONArray) (Userobjgowa.get("Languages"));
+                for(int j=0;j<langarr.size();j++)
+                {
+                    info.addLanguage(langarr.get(j).toString());
+                }
 
 
                 parsed.setInfo(info);
@@ -606,7 +617,7 @@ public class SocialNetwork extends Application {
 
     public static void main(String[] args) throws IOException {
         ReadUsersFromFile();
-        ReadGroupsFromFile();
+        //ReadGroupsFromFile();
          launch(args);
 
        for(int i=0; i<hashTableSize;i++)
