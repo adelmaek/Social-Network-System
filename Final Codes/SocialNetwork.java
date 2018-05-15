@@ -361,7 +361,7 @@ public class SocialNetwork extends Application {
 
         try {
 
-            Object obj = parser.parse(new FileReader("Groups.json"));
+            Object obj = parser.parse(new FileReader("C:/Users/Mark/IdeaProjects/SN/src/socialnetwork/Groups.json"));
 
             JSONArray arrayofgps = (JSONArray) obj;
 
@@ -389,10 +389,8 @@ public class SocialNetwork extends Application {
                     JSONArray LikesObj = (JSONArray) Postobjinfo.get("Likes");
                     JSONArray DislikesObj = (JSONArray) Postobjinfo.get("Dislikes");
                     for (int k = 0; k < CommentsObj.size(); k++) {
-                        Comment c = new Comment();
                         JSONObject Comm = (JSONObject) CommentsObj.get(k);
-                        c.setCommentOwner(Comm.get("Comment Owner").toString());
-                        c.setComment(Comm.get("Comment Content").toString());
+                        Comment c = new Comment(Comm.get("Comment Content").toString(),Comm.get("Comment Owner").toString());
                         MyComments.add(c);
                     }
                     for (int k = 0; k < DislikesObj.size(); k++) {
@@ -442,7 +440,7 @@ public class SocialNetwork extends Application {
 
         try {
 
-            Object obj = parser.parse(new FileReader("UsersFileKolena.json"));
+            Object obj = parser.parse(new FileReader("C:/Users/Mark/IdeaProjects/SN/src/socialnetwork/UsersFileKolena.json"));
             // JSONObject jsonObject =  (JSONObject) obj;
             JSONArray arrayofusers = (JSONArray) obj;
 
@@ -474,12 +472,10 @@ public class SocialNetwork extends Application {
                     JSONArray DislikesObj = (JSONArray) Postobjinfo.get("Dislikes");
 
                     for (int k = 0; k < CommentsObj.size(); k++) {
-                        Comment c = new Comment();
                         JSONObject Comm = (JSONObject) CommentsObj.get(k);
-                        c.setCommentOwner(Comm.get("Comment Owner").toString());
-                        c.setComment(Comm.get("Comment Content").toString());
+                        Comment c = new Comment(Comm.get("Comment Content").toString(),Comm.get("Comment Owner").toString());
                         MyComments.add(c);
-                        System.out.println(c.getComment());
+                       // System.out.println(c.getComment());
                     }
                     for (int k = 0; k < DislikesObj.size(); k++) {
                         Dislikes.add(DislikesObj.get(k).toString());
