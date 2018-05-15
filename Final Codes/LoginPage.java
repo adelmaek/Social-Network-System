@@ -140,6 +140,7 @@ public class LoginPage {
             {
                 SocialNetwork.currentUser = loggeduser;
                 SocialNetwork.window.setScene(new HomePage().homePage(SocialNetwork.currentUser));
+
                 SocialNetwork.window.show();
             }
 
@@ -241,6 +242,7 @@ public class LoginPage {
                   MessageBox.display("Registration incomplete","Please fill all the fields");
                 }
                 else{
+                MessageBox.display("Registration Complete","Successful registration");
                 user NewEntry = new user();
                 int day = RegisterDateOfBirth.getValue().getDayOfMonth();
                 int month = RegisterDateOfBirth.getValue().getMonthValue();
@@ -306,7 +308,7 @@ public class LoginPage {
     }
     public Scene loginPage (Stage window)
     {
-        window.setTitle("Login Page");
+        window.setTitle("Our Social Network");
         setTop();
         setCenter ();
         Scene login = new Scene(page, 1300, 650);

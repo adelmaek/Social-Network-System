@@ -152,6 +152,14 @@ public class SocialNetwork extends Application {
         JSONObject UserObject = new JSONObject();
         JSONObject UserObj = new JSONObject();
         UserObject.put("City", u.getInfo().getCity());
+
+        JSONArray grparr=new JSONArray();
+        for(int i=0;i<u.getGroups_names().size();i++)
+        {
+            grparr.add(u.getGroups_names().get(i));
+        }
+        UserObject.put("Groups",grparr);
+
         UserObject.put("School", u.getInfo().getSchool());
         UserObject.put("Username", u.getUsername());
         UserObject.put("College", u.getInfo().getCollege());
@@ -203,6 +211,10 @@ public class SocialNetwork extends Application {
                 JsonComments.add(Commentobj);
             }
             PostObject.put("Comments", JsonComments);
+
+            PostObject.put("Number Of Likes",p.getNumbOfLikes());
+            PostObject.put("Number Of Dislikes",p.getNumbOfDislikes());
+
             JSONArray JsonLikes = new JSONArray();
             JSONArray JsonDislikes = new JSONArray();
             for (int i = 0; i < p.getNumbOfLikes(); i++) {
@@ -294,6 +306,14 @@ public class SocialNetwork extends Application {
             }
 
             parsed.setPosts(Posts);
+
+            Vector<String> grpvec=new Vector<String>(10);
+            JSONArray gpobj=(JSONArray)  Userobjgowa.get("Groups");
+            for(int k=0;k<gpobj.size();k++)
+            {
+                grpvec.add(gpobj.get(k).toString());
+            }
+            parsed.setGroups_names(grpvec);
 
             //friends
             JSONArray FriendsObj = (JSONArray) Userobjgowa.get("Friends");
@@ -422,7 +442,7 @@ public class SocialNetwork extends Application {
 
         try {
 
-            Object obj = parser.parse(new FileReader("C:/Users/Mark/IdeaProjects/SN/src/socialnetwork/UsersFileKolena.json"));
+            Object obj = parser.parse(new FileReader("UsersFileKolena.json"));
             // JSONObject jsonObject =  (JSONObject) obj;
             JSONArray arrayofusers = (JSONArray) obj;
 
@@ -452,12 +472,14 @@ public class SocialNetwork extends Application {
                     JSONArray CommentsObj = (JSONArray) Postobjinfo.get("Comments");
                     JSONArray LikesObj = (JSONArray) Postobjinfo.get("Likes");
                     JSONArray DislikesObj = (JSONArray) Postobjinfo.get("Dislikes");
+
                     for (int k = 0; k < CommentsObj.size(); k++) {
                         Comment c = new Comment();
                         JSONObject Comm = (JSONObject) CommentsObj.get(k);
                         c.setCommentOwner(Comm.get("Comment Owner").toString());
                         c.setComment(Comm.get("Comment Content").toString());
                         MyComments.add(c);
+                        System.out.println(c.getComment());
                     }
                     for (int k = 0; k < DislikesObj.size(); k++) {
                         Dislikes.add(DislikesObj.get(k).toString());
@@ -468,7 +490,9 @@ public class SocialNetwork extends Application {
                     pp.setPostComments(MyComments);
                     pp.setDislike(Dislikes);
                     pp.setLikes(Likes);
+                    pp.setNumbOfDislikes(Integer.parseInt(Postobjinfo.get("Number Of Dislikes").toString()));
 
+                    pp.setNumbOfLikes(Integer.parseInt(Postobjinfo.get("Number Of Likes").toString()));
                     Posts.add(pp);
                 }
 
@@ -617,7 +641,7 @@ public class SocialNetwork extends Application {
 
     public static void main(String[] args) throws IOException {
         ReadUsersFromFile();
-        //ReadGroupsFromFile();
+        ReadGroupsFromFile();
          launch(args);
 
        for(int i=0; i<hashTableSize;i++)
@@ -633,6 +657,47 @@ public class SocialNetwork extends Application {
                     }
                     else
                     {
+                       /* String AFriend;
+                        Boolean found=false;
+                        for(int j=0;j<u.getFriends().size();j++)
+                        {
+                            AFriend=u.getFriends().get(j);
+                            for(int m=0; m<hashTableSize;m++)
+                            {
+                                LinkedList<user> ll = usersHashTable[m];
+                                if(ll!=null)
+                                {
+                                    for (user uu: ll) {
+
+                                        if(uu.getUsername().equals(AFriend))
+                                        {
+                                            for(int h=0;h<uu.getFriends().size();h++)
+                                            {
+                                                if(uu.getFriends().get(h).equals(u.getUsername()))
+                                                {
+                                                    found=true;
+                                                }
+                                            }
+                                            if(found==false)
+                                            {
+                                                searchUsersHashTable(uu.getUsername()).addFriend(u.getUsername());
+                                            }
+
+                                        }
+
+                                    }
+                                }
+
+
+                            }
+
+
+                        }
+
+
+
+*/
+
                     SaveUserInFile(u);
                     }
                 }
