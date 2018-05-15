@@ -29,6 +29,6 @@ for i in range (len(data)):
 for i in range (len(nx.nodes(graph))):
     rand_color = randomcolor.RandomColor()
     
-nx.draw(graph,node_color='#4da6ff',font_size=10,node_size=500,edge_color='#99d6ff',width=0.5,with_labels = True)
+nx.draw(graph,node_color='#F0E68C',font_size=8,node_size=700,edge_color='#2f4f4f',width=0.5,with_labels = True)
 plt.savefig("graph.png") # save as png
 plt.show() # display
