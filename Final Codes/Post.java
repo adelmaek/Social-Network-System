@@ -325,6 +325,14 @@ import javafx.stage.Stage;
             post_dislikes.setText(String.valueOf(numbOfDislikes));
             dislike.add(SocialNetwork.currentUser.getUsername());
         });
+        if(likes.indexOf(SocialNetwork.currentUser.getUsername())!=-1)
+        {
+            likeButton.setDisable(true);
+        }
+        if(dislike.indexOf(SocialNetwork.currentUser.getUsername())!=-1)
+        {
+            disLikeButton.setDisable(true);
+        }
 
         HBox hb_add_comments = new HBox();
 
